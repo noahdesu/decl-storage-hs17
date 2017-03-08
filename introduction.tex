@@ -1,0 +1,46 @@
+\section{Introduction}
+\label{sec:intro}
+
+% what is the problem?
+As large-scale unified storage systems evolve to support next-generation
+hardware and meet the requirements of an increasingly diverse set of
+applications, \emph{de jure} approaches of the past---based on standardized
+interfaces---are giving way to ad-hoc co-design strategies that embrace
+domain-specific interfaces and optimizations.
+    
+% why is it interesting and important?
+fixed storage apis force applications to use external data management, or
+duplicate complex error prone processes when the system doesnt meet their
+needs. fear of vendor lock-in is beginning to subside with open-source.  by
+exposing internal services applications can compose existing services to
+support application requirements.  also we may see entirely new sotrage system
+based on apsecific cases, often based on consitency requirements.
+
+data is the most critical component, but interfaces are just as critical
+because they define access. how do we manage this trend?
+
+% why is it hard? why do naive approaches fail?
+its hard because the design space is quite large. afterall, how long have we
+been dealing with blocks and files.
+the reason we wanted to move away from standard storage apis in the first
+place is because the storage system wants to evolve. so we cant advocate a
+fixed api. domain specific knowledge of both applications and storage
+systems is needed then to optimize any particular instance of co-design.
+
+% why hasn't it been solved before? what is wrong with previous solutions? how
+% does mine differ?
+Malacology~\cite{sevilla:eurosys17} is a recently proposed \emph{programmable}
+storage system that exposes common sub-systems found in distributed storage
+systems for reuse by applications, avoiding duplication of complex error-prone
+services.
+
+Malacology demonstrates a set of prinicples for exposing services, and
+demonstrates with real world examples. While the exact form of these services
+is not well-defined, we argue in this paper that in order for storage systems
+to continue to evolve, managing interface change must be a fundamental
+component of programmable storage.
+
+Declarative specification is the way to go here.
+
+% what are the key components of my approach and results? also include anh
+% specific limitations.
