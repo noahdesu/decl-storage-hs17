@@ -1,7 +1,6 @@
 \section{Introduction}
 \label{sec:intro}
 
-% what is the problem?
 As large-scale unified storage systems evolve to meet the requirements of
 next-generation hardware and an increasingly diverse set of applications,
 \emph{de jure} approaches of the past---based on standardized interfaces---are
@@ -9,50 +8,50 @@ giving way domain-specific interfaces and optimizations. While promising,
 current approaches to co-design are based on ad-hoc strategies that are
 untenable.
 
-% why is it interesting and important?
+The standardization of the POSIX I/O interface has been a major success,
+allowing application developers to avoid vendor lock-in, while providing
+isolation to system developers. However, large-scale storage systems have been
+dominated by proprietary offerings, preventing exploration of alternative
+interfaces and complicating migration paths. Recently we have seen an increase
+in the number of special-purpose storage systems, including high-performance
+open-source storage systems that are modifiable, enabling system changes
+without fear of vendor lock-in. Unfortunately, evolving storage system
+interfaces is a challenging task that involves domain expertise and requires
+programmers to forfeit the protection from change afforded by narrow
+interfaces.
 
-fixed storage apis force applications to use external data management, or
-duplicate complex error prone processes when the system doesnt meet their
-needs. fear of vendor lock-in is beginning to subside with open-source.  by
-exposing internal services applications can compose existing services to
-support application requirements.  also we may see entirely new sotrage system
-based on apsecific cases, often based on consitency requirements.
+Malacology~\cite{sevilla:eurosys17} is a recently proposed storage system that
+advocates for an approach to co-design called \emph{programmable storage}. The
+approach is based on exposing low-level functionality as reusable building
+blocks, allowing developers to custom-fit their applications to take advantage
+of the code-hardened capabilities of the underlying system and avoid
+duplication of complex and error-prone services. By recombining existing
+services in the Ceph storage system, Malacology demonstrated how two
+real-world services could be constructed. Unfortunately, implementing
+applications on top of a system like Malacology can be an ad-hoc process
+that is difficult to reason about and manage.
 
-data is the most critical component, but interfaces are just as critical
-because they define access. how do we manage this trend?
+Despite the powerful approach advocated by Malacology, it requires programmers
+to navigate a complex design space, simultaneously addressing often orthogonal
+concerns including functional correctness, performance, and fault-tolerance.
+Worse still, the domain expertise required to build a performant interface can
+be quickly lost because interface composition is sensitive to changes in the
+underlying environment such as hardware and software upgrades as well as
+evolving workloads common place in unified storage systems.
 
-% why is it hard? why do naive approaches fail?
+To address this challenge we are actively exploring the use of high-level
+declarative languages based on Datalog to program storage APIs. By specifying
+the functional behavior of a storage interface once in a relational (or
+algebraic language), an optimizer can use a cost model to explore a space of
+functionality equivalent physical implementations. Much like query planning and
+optimization in database systems, this approach will separate the concerns of
+correctness and performance, protecting applications against changes. But
+despite the parallels with database systems, the design space is quite
+different.
 
-The design space is large, and also quite different than traditional database
-optimization techniques handle.
-
-be very large, and it can be difficult to choose a design that future proofs an
-implementation against hardware and software upgrades
-
-
-
-
-its hard because the design space is quite large. afterall, how long have we
-been dealing with blocks and files.
-the reason we wanted to move away from standard storage apis in the first
-place is because the storage system wants to evolve. so we cant advocate a
-fixed api. domain specific knowledge of both applications and storage
-systems is needed then to optimize any particular instance of co-design.
-
-% why hasn't it been solved before? what is wrong with previous solutions? how
-% does mine differ?
-Malacology~\cite{sevilla:eurosys17} is a recently proposed \emph{programmable}
-storage system that exposes common sub-systems found in distributed storage
-systems for reuse by applications, avoiding duplication of complex error-prone
-services.
-
-Malacology demonstrates a set of prinicples for exposing services, and
-demonstrates with real world examples. While the exact form of these services
-is not well-defined, we argue in this paper that in order for storage systems
-to continue to evolve, managing interface change must be a fundamental
-component of programmable storage.
-
-Declarative specification is the way to go here.
-
-% what are the key components of my approach and results? also include anh
-% specific limitations.
+In this paper we demonstrate the challenge of programmable storage by showing
+the sensitivity of domain-specific interfaces to changes in the underlying
+system. We then show that the relational model is able to capture the
+functional behavior of a popular shared-log service, and finally we explore a
+few additional optimizations that can be utilized to expand the space of
+possible implementations.

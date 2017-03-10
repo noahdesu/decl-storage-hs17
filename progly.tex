@@ -36,7 +36,8 @@ multiple real-world applications.
 \begin{figure}[th]
 \centering
 \includegraphics[width=1.0\linewidth]{implementation-overview.png}
-\caption{Malacology implementation in Ceph.}
+\caption{Malacology implementation in Ceph. Existing sub-systems are composed
+    to form new services and application-specific optimizations.}
 \label{fig:malacology}
 \end{figure}
 
@@ -76,16 +77,3 @@ reasonable choice of a simpler implementation in 2014, a storage interface
 will perform worse in 2016, requiring significant rework of low-level
 interface implementations.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=1.0\linewidth]{batching.png}
-\caption{asdf}
-\label{fig:jewel-hdd-128b}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=1.0\linewidth]{batching-outlier-detect.png}
-\caption{asdf}
-\label{fig:jewel-hdd-128b}
-\end{figure}
