@@ -2,13 +2,15 @@
 \label{sec:intro}
 
 % what is the problem?
-As large-scale unified storage systems evolve to support next-generation
-hardware and meet the requirements of an increasingly diverse set of
-applications, \emph{de jure} approaches of the past---based on standardized
-interfaces---are giving way to ad-hoc co-design strategies that embrace
-domain-specific interfaces and optimizations.
-    
+As large-scale unified storage systems evolve to meet the requirements of
+next-generation hardware and an increasingly diverse set of applications,
+\emph{de jure} approaches of the past---based on standardized interfaces---are
+giving way domain-specific interfaces and optimizations. While promising,
+current approaches to co-design are based on ad-hoc strategies that are
+untenable.
+
 % why is it interesting and important?
+
 fixed storage apis force applications to use external data management, or
 duplicate complex error prone processes when the system doesnt meet their
 needs. fear of vendor lock-in is beginning to subside with open-source.  by
@@ -20,6 +22,16 @@ data is the most critical component, but interfaces are just as critical
 because they define access. how do we manage this trend?
 
 % why is it hard? why do naive approaches fail?
+
+The design space is large, and also quite different than traditional database
+optimization techniques handle.
+
+be very large, and it can be difficult to choose a design that future proofs an
+implementation against hardware and software upgrades
+
+
+
+
 its hard because the design space is quite large. afterall, how long have we
 been dealing with blocks and files.
 the reason we wanted to move away from standard storage apis in the first
