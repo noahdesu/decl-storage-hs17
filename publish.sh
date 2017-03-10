@@ -19,7 +19,7 @@ mv paper.pdf ${PDF}
 
 # add the pdf and push
 git checkout -b builds origin/builds ||
-  git checkout --orphan builds && git rm -rf .
+  git checkout --orphan builds || git rm -rf .
 mv ${PDF} ${REV}.pdf
 rm paper.pdf || true
 ln -s ${REV}.pdf paper.pdf
