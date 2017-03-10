@@ -1,2 +1,78 @@
 \section{Design Space}
 \label{sec:dspace}
+
+It is easy to underestimate the scale of the design space, even for a
+relatively simple interface such as a distributed shared-log. 
+
+\subsection{Software Parameters}
+
+Ceph releases stable versions every year (Oct/Nov) and long-term support (LTS)
+versions every 3-4 months~\cite{website:ceph-releases}. The head of the master
+branch moves quickly because there are over 400 contributors and an active
+mailing list.  Over the past calendar year, there were between 70 and 260
+commits per week~\cite{website:ceph-github}. 
+
+Ceph constantly adds new features and one particular feature that has the
+potential to greatly improve the performance of log appends is
+BlueStore~\cite{weil:vault2016-bluestore}. BlueStore is a replacement for the
+FileStore file system in the OSD (traditionally XFS).  FileStore has
+performance problems with transactions and enumerations; namely the journal
+needed to assure atomicity incurs double writes and the file system metadata
+model makes object listings slow, respectively. BlueStore stores data directly
+on a block device and the metadata in RocksDB, which is provided by a
+minimalistic, non-POSIX C++ filesystem. This model adheres to the overall
+software defined storage strategy of Ceph because it gives the administrator
+the flexibility to store the 3 components of BlueStore (e.g., data, RocksDB
+database, and RocksDB write-ahead log) on any partition on any device in the
+OSD. 
+
+\textbf{Takeaway}: choosing the best implementations is dependent on both the
+timing of the development (Ceph Version) and the expertise of the administrator
+(Ceph Features). Different versions and features of Ceph may lead the
+administrator to choose a suboptimal implementation for the system's next
+upgrade. The software parameters must be accounted for and benchmarked when
+making design decisions.
+
+\subsubsection{System Tunables}
+
+The most recent version of Ceph (v10.2.0-1281-g1f03205) has 994 tunable
+parameters\footnote{This number comes from \texttt{src/common/config\_opts.h}
+with debug options filtered out.}, where 195 of them pertain to the OSD itself
+and 95 of them focus on the OSD back end file system (i.e. its
+\texttt{filestore}). Ceph also has tunables for the subsystems it uses, like
+LevelDB (10 tunables), RocksDB (5 tunables), its own key-value stores (5
+tunables), its object cache (6 tunables), its journals (24 tunables), and its
+other optional object stores like BlueStore (49 tunables).
+
+This many domain-specific tunables makes it almost impossible to come up with
+the best set of tunables, although auto-tuning like the work done
+in~\cite{behzad:sc2013-autotuning} could go a long way. Regardless of the
+technique that we use, it is clear the number of tunables increases the
+physical design parameters to an unwieldy state space size.
+
+\textbf{Takeaway}: the number and complexity of Ceph's tunables makes
+brute-force parameter selection hard.
+
+\subsubsection{Hardware Parameters}
+
+Ceph is designed to run on a wide variety of commodity hardware as well as new
+NVMe devices. All these devices have their own set of characteristics and
+tunables (e.g., the IO operation scheduler type). In our experiments, we tested
+SSD, HDDs, NVMe devices and discovered a wide range of behaviors and
+performance profiles. As an example, Figure~\ref{fig:jewel-hdd-128b} shows the
+write performance of 128 byte log entries using Jewel and a single HDD.
+Performance is 10\(\times\) slower than its SSD counterpart in
+Figure~\ref{fig:jewel_v_firefly_v_es} (top row, third column) but the behavior
+and relative performance make this hardware configuration especially tricky.
+
+The behavior of the 1:1 implementations shows throughput drops lasting for
+minutes at a time -- this limits our focus to the N:1 implementations. The
+performance of \texttt{(N:1, BS)} implementation is almost identical to
+\texttt{(N:1, KV)} (within 1\% mean throughput). Regardless of the true
+bottleneck, it is clear that choosing \texttt{(N:1, KV)} is the better choice
+because of the resulting implementation should be less complex and there is
+minimal performance degradation.
+
+\textbf{Takeaway}: choosing the best implementations is dependent on hardware.
+Something as common as an upgrade from HDD to SSD may nullify the benefits of a
+certain implementation. 

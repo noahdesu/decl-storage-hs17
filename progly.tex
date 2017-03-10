@@ -22,6 +22,11 @@ and including designing entirely new systems. This approach requires
 significant domain knowledge, and extreme care when altering code-hardened
 systems.
 
+Rather than relying on storage systems to evolve \emph{or} applications to
+change, a hybrid approach that embraces interface instability allows maximum
+flexibility, so long as it does not impose an unmanagable burden on
+developers.
+
 \subsection{Programmable Storage}
 
 Malacology is a recently proposed approach that advocates a design strategy
@@ -40,6 +45,15 @@ multiple real-world applications.
     to form new services and application-specific optimizations.}
 \label{fig:malacology}
 \end{figure}
+
+The Malacology services exposed in Ceph were demonstrated by implementing the
+CORFU high-performance shared-log abstraction. The design re-used metadata
+management caching features to construct the high-frequncy network-attached
+counter, and software-defined object interfaces replicated the write-once
+semantics of the storage devices, both of which are required by the CORFU
+protocol. While the ability to build software-defined interfaces is powerful,
+next we will show how access to low-level interfaces can be a double-edged
+sword, providing power at the cost of maintenance.
 
 \subsection{Everyone Loves A Standard}
 
@@ -76,4 +90,3 @@ implementations on a newer version of Ceph illustrate a challenge: given a
 reasonable choice of a simpler implementation in 2014, a storage interface
 will perform worse in 2016, requiring significant rework of low-level
 interface implementations.
-
