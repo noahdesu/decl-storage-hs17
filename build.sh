@@ -11,8 +11,8 @@ popd
 if [ -z ${SKIPDOCKER+x} ]; then
   cat <<EOF | docker build -t pdflatex -
 FROM fedora:25
-RUN dnf install -y texlive texlive-pbox texlive-appendix texlive-endnotes
-RUN dnf install -y texlive-listing
+RUN dnf install -y texlive texlive-pbox texlive-appendix \
+  texlive-endnotes texlive-listing
 WORKDIR /data
 EOF
   docker run -v $srcdir:/data -e SKIPDOCKER=1 \

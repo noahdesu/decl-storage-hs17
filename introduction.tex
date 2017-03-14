@@ -2,17 +2,18 @@
 \label{sec:intro}
 
 As large-scale unified storage systems evolve to meet the requirements of
-next-generation hardware and an increasingly diverse set of applications,
+of an increasingly diverse set of application and next-generation hardware,
 \emph{de jure} approaches of the past---based on standardized interfaces---are
 giving way domain-specific interfaces and optimizations. While promising,
 current approaches to co-design are based on ad-hoc strategies that are
 untenable.
 
 The standardization of the POSIX I/O interface has been a major success,
-allowing application developers to avoid vendor lock-in, while providing
-isolation to system developers. However, large-scale storage systems have been
+allowing application developers to avoid vendor lock-in, and storage system
+designers to innovate independently.
+However, large-scale storage systems have been
 dominated by proprietary offerings, preventing exploration of alternative
-interfaces and complicating migration paths. Recently we have seen an increase
+interfaces. Recently we have seen an increase
 in the number of special-purpose storage systems, including high-performance
 open-source storage systems that are modifiable, enabling system changes
 without fear of vendor lock-in. Unfortunately, evolving storage system
@@ -40,10 +41,10 @@ underlying environment such as hardware and software upgrades as well as
 evolving workloads common place in unified storage systems.
 
 To address this challenge we are actively exploring the use of high-level
-declarative languages based on Datalog to program storage APIs. By specifying
+declarative languages based on Datalog to program storage interfaces. By specifying
 the functional behavior of a storage interface once in a relational (or
 algebraic language), an optimizer can use a cost model to explore a space of
-functionality equivalent physical implementations. Much like query planning and
+functionally equivalent physical implementations. Much like query planning and
 optimization in database systems, this approach will separate the concerns of
 correctness and performance, protecting applications against changes. But
 despite the parallels with database systems, the design space is quite
@@ -52,6 +53,6 @@ different.
 In this paper we demonstrate the challenge of programmable storage by showing
 the sensitivity of domain-specific interfaces to changes in the underlying
 system. We then show that the relational model is able to capture the
-functional behavior of a popular shared-log service, and finally we explore a
-few additional optimizations that can be utilized to expand the space of
+functional behavior of a popular shared-log service, and finally we explore
+additional optimizations that can be utilized to expand the space of
 possible implementations.
