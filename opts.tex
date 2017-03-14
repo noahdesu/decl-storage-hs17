@@ -7,6 +7,20 @@ infrastructure for automating this mapping and achieving other optimizations.
 
 discussion
 
+Separating the relational semantics of such compositions from details
+of their physical implementations introduces a number of degrees of freedom,
+similar to the ``data independence'' offered by database query languages.
+
+The
+choice of access methods (for example, whether to use a bytestream interface
+or a key/value store), storage device classes (e.g., whether to use HDDs or
+SDDs), physical layout details (e.g. a 1:1 or N:1 mapping) and execution plans
+(e.g. operator ordering) can be postponed to execution time.  The optimal
+choices for these physical design details are likely to change much more often
+than the logical specification, freeing the interface designer from the need
+to rewrite systems and device and interface characteristics change.
+
+
 \subsection{Physical Design}
 
 other parametes to group commit

@@ -1,55 +1,47 @@
-\section{Programming Model}
+\section{Declarative Programmable Storage}
 \label{sec:prog-model}
 
-It is important to not restrict use to developers seasoned in distributed
-programming and those with knowledge of the intricacies of Ceph and its
-performance model. Any hard-coded imperative method for build storage
-interfaces today restrict the optimizations that can be performed
-automatically or derived from static analysis.  To this end we present a
-declarative programming model that can reduce the learning curve for new
-users, and allow existing developers to increase producitivty by writing less
-code that is more portable.
+Current ad-hoc approaches to programmable storage restrict use to developers
+with distributed programming expertise, knowledge of the intricacies of the
+undelrying storage system and its performance model, and primarily use
+hard-coded imperative methods. This restricts the use of optimizations that
+can be performed automatically or derived from static analysis.  Based on the
+challenges we have demonstrated stemming from the dynamic nature and large
+design space of programmable storage, we present an alternative, declarative
+programming model that can reduce the learning curve for new users, and allow
+existing developers to increase producitivty by writing less code that is more
+portable.
 
-The model corresponds to a subset of the Bloom language which a
+The model we propose corresponds to a subset of the Bloom language which a
 declarative language for expressing distributed programs as an unordered set
-of rules~\cite{alvaro:cidr11}. These rules fully specify program semantics and allow a programmer
-to ignore the details associated with how a program is evaluated. This level
-of abstraction is attractive for building storage interfaces whose portability
-and correctness is critical.
+of rules~\cite{alvaro:cidr11}. These rules fully specify program semantics and
+allow a programmer to ignore the details associated with how a program is
+evaluated. This level of abstraction is attractive for building storage
+interfaces whose portability and correctness is critical. We model the
+storage system state uniformly as a collection of relations, with interfaces
+being expressed as a collection of \emph{queries} over a request stream that
+are filtered, transformed, and combined with system state. Next we present a
+brief example of the CORFU shared-log interface expressed using this model.
 
-We model the storage system state uniformly as a collection of relations. The
-composition of a collection of existing interfaces is then expressed as a
-collection of high-level \emph{queries} that describe how a stream of requests
-(API calls) are filtered, transformed and combined with existing state to
-define streams of outputs (API call returns as well as updates to system
-state).  Separating the relational semantics of such compositions from details
-of their physical implementations introduces a number of degrees of freedom,
-similar to the ``data independence'' offered by database query languages.  The
-choice of access methods (for example, whether to use a bytestream interface
-or a key/value store), storage device classes (e.g., whether to use HDDs or
-SDDs), physical layout details (e.g. a 1:1 or N:1 mapping) and execution plans
-(e.g. operator ordering) can be postponed to execution time.  The optimal
-choices for these physical design details are likely to change much more often
-than the logical specification, freeing the interface designer from the need
-to rewrite systems and device and interface characteristics change.
+\subsection{Example: The CORFU Log Interface}
 
-\subsection{The CORFU Log Interface}
+The CORFU log protocol achieves high-performance in part by striping the log
+across a large number of fast storage devices. Using our declarative language
+we model the log as a single relation, hiding the implementation detail of log
+partitioning. Lines XY in Listing~\ref{lst:state} show the declaration of
+state for the CORFU interface consisting of two persistent collections: one
+for the log data, and one for interface metadata. The mapping of collections
+onto physical storage is abstracted at this level, permitting optimizations
+discussed earlier to be applied transparently.  Note that due to space
+limitations we only highlight salient features, and the reader may refer
+to~\cite{watkins:ucsc-soe-16-12} for a full program listing.
 
-To demonstrate the approach of using a declarative language, we show how the
-CORFU shared-log protocol can be expressed independent of the interfaces and
-features of the underlying storage system. We have included the salient
-components of the specification, but due to space constraints refer to the
-reader to~\cite{tr} for a full program listing.
-
-Listing~\ref{lst:state} shows the declaration of state for the CORFU
-interface.  Lines 1---3 define the schema of the two persistent collections
-that hold the current epoch value, and the log contents. These collections are
-mapped onto storage but abstract away the low-level interface Lines 5---6
-define named collections for each operation type. The scratch type indicates
-that the data is not persistent, and only remains in the collection for a
-single execution time step. The remaining scratch collections are defined to
-further subdivide the operations based on different properties which we'll
-describe next.
+Lines XY define operations as scratch collections that are not persistent;
+they contain state only for the duration of a single time step. Operations may
+be further sub-divided for specific cases, such as \emph{valid} or
+\emph{invalid} depending on if they reflect up-to-date system state.
+An implementation of this guard may select to cache the epoch value in
+volatile storage because it infrequently changes.
 
 \begin{lstlisting}[caption={State Declaration}, label=lst:state]
 state do
@@ -62,17 +54,7 @@ state do
   # op did or did not pass the epoch guard
   scratch :valid_op,   op.schema
   scratch :invalid_op, op.schema
-end
-\end{lstlisting}
 
-Every operation handled by a storage device in CORFU is guarded by comparing
-the epoch in which it was dispatched with the current configured epoch.
-Listing~\ref{lst:guard} shows how an operation is compared against the current
-state. An implementation of this guard may select to cache the epoch value in
-volatile storage because it infrequently changes.
-
-\begin{lstlisting}[caption={Epoch Guard}, label=lst:guard]
-state do
   # epoch guard
   invalid_op <= (op * epoch).pairs{|o,e|
     o.epoch <= e.epoch}
@@ -112,20 +94,15 @@ bloom :trim do
 end
 \end{lstlisting}
 
-Amazingly, these few code snippets can express the semantics of the entire
+Amazingly, only a few code snippets can express the semantics of the entire
 storage device interface requirements in CORFU. For reference our prototype
 implementation of CORFU in Ceph (called
 ZLog\footnote{https://github.com/noahdesu/zlog}) is written in C++ and the
-storage interface component comprises nearly 700 lines of code. This version
-was designed to store log entries and metadata in the key-value interface,
-thus requiring a lengthy rewrite to realize the performance advantage
-available by using the bytestream interface.
-Furthermore, the complexity introduced by using the
-bytestream interface would grow the amount of code written in the optimized
-version.
-
-But beyond the convenience of writing less code, it is far easier for the
-programmer writing an interface such as CORFU to convenience herself of the
-correctness of the high-level details of the implementation without being
-distracted by issues related to physical design or the many other gotchas that
-one must deal with when writing low-level systems software.
+storage interface component comprises nearly 700 lines of code, and uses a
+hard-coded indexing strategy that has been rewritten multiple times to explore
+alternative optimization techniques. Beyond the convenience of writing less
+code, it is far easier for the programmer writing an interface such as CORFU
+to convenience herself of the correctness of the high-level details of the
+implementation without being distracted by issues related to physical design
+or the many other gotchas that one must deal with when writing low-level
+systems software.
