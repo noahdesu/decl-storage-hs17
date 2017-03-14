@@ -3,13 +3,13 @@
 
 Current ad-hoc approaches to programmable storage restrict use to developers
 with distributed programming expertise, knowledge of the intricacies of the
-undelrying storage system and its performance model, and primarily use
+underlying storage system and its performance model, and primarily use
 hard-coded imperative methods. This restricts the use of optimizations that
 can be performed automatically or derived from static analysis.  Based on the
 challenges we have demonstrated stemming from the dynamic nature and large
 design space of programmable storage, we present an alternative, declarative
 programming model that can reduce the learning curve for new users, and allow
-existing developers to increase producitivty by writing less code that is more
+existing developers to increase productivity by writing less code that is more
 portable.
 
 The model we propose corresponds to a subset of the Bloom language which a
@@ -28,7 +28,7 @@ brief example of the CORFU shared-log interface expressed using this model.
 The CORFU log protocol achieves high-performance in part by striping the log
 across a large number of fast storage devices. Using our declarative language
 we model the log as a single relation, hiding the implementation detail of log
-partitioning. Lines XY in Listing~\ref{lst:state} show the declaration of
+partitioning. Lines 2-3 in Listing~\ref{lst:state} show the declaration of
 state for the CORFU interface consisting of two persistent collections: one
 for the log data, and one for interface metadata. The mapping of collections
 onto physical storage is abstracted at this level, permitting optimizations
@@ -36,12 +36,12 @@ discussed earlier to be applied transparently.  Note that due to space
 limitations we only highlight salient features, and the reader may refer
 to~\cite{watkins:ucsc-soe-16-12} for a full program listing.
 
-Lines XY define operations as scratch collections that are not persistent;
+Lines 5-10 define operations as scratch collections that are not persistent;
 they contain state only for the duration of a single time step. Operations may
 be further sub-divided for specific cases, such as \emph{valid} or
-\emph{invalid} depending on if they reflect up-to-date system state.
-An implementation of this guard may select to cache the epoch value in
-volatile storage because it infrequently changes.
+\emph{invalid} depending on if they reflect up-to-date system state.  An
+implementation of this guard is shown on lines 12-17, and may select to cache
+the epoch value in volatile storage because it infrequently changes.
 
 \begin{lstlisting}[caption={State Declaration}, label=lst:state]
 state do
