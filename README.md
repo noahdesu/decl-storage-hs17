@@ -1,3 +1,3 @@
-[![Build Status](https://travis-ci.org/noahdesu/paperblah.svg?branch=master)](https://travis-ci.org/noahdesu/paperblah)
+[![Build Status](https://travis-ci.org/noahdesu/decl-storage-hs17.svg?branch=master)](https://travis-ci.org/noahdesu/decl-storage-hs17)
 
-[Latest Build](https://github.com/noahdesu/paperblah/blob/builds/paper.pdf)
+[Latest Build](https://github.com/noahdesu/decl-storage-hs17/blob/builds/paper.pdf)
