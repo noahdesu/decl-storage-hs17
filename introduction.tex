@@ -32,7 +32,8 @@ blocks, allowing developers to custom-fit their applications to take advantage
 of the code-hardened capabilities of the underlying system and avoid
 duplication of complex and error-prone services. By recombining existing
 services in the Ceph storage system, Malacology demonstrated how two
-real-world services could be constructed. Unfortunately, implementing
+real-world services, a distributed shared-log and a file system metadata load
+balancer, could be constructed. Unfortunately, implementing
 applications on top of a system like Malacology can be an ad-hoc process
 that is difficult to reason about and manage.
 
@@ -40,9 +41,9 @@ Despite the powerful approach advocated by Malacology, it requires programmers
 to navigate a complex design space, simultaneously addressing often orthogonal
 concerns including functional correctness, performance, and fault-tolerance.
 Worse still, the domain expertise required to build a performant interface can
-be quickly lost because interface composition is sensitive to changes in the
-underlying environment such as hardware and software upgrades as well as
-evolving workloads common place in unified storage systems.
+be quickly lost. The use of interface composition in Malacology is sensitve to
+change, and unified storage systems exhibit quickly evolving workloads, and
+frequent software and hardware upgrades.
 
 To address these challenges, we advocate for the use of high-level declarative
 languages (e.g. Datalog) as means by which new storage system interfaces are
@@ -52,7 +53,8 @@ explore a space of functionally equivalent physical implementations. Much like
 query planning and optimization in database systems, this approach will
 separate the concerns of correctness and performance, protecting applications
 against changes. But despite the parallels with database systems, the design
-space is quite different.
+space for optimization is quite different, which we demonstrate, and begin to
+address in this paper.
 
 In this paper we demonstrate the challenge of programmable storage by showing
 the sensitivity of domain-specific interfaces to changes in the underlying
