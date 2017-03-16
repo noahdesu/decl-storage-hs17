@@ -5,27 +5,35 @@ The narrow interface exposed by storage systems has been a boon in allowing
 systems and applications to evolve independently, in affect limiting the size
 of the design space where applications couple with storage. Programmable
 storage lifts the veil on the system, and with it, forces applications developers
-to confront a large set of possible designs.
+to confront a large and expanding set of possible designs.
+
+In this section we elucidate the matter of design space size and complexity in
+programmable storage. We report on our experience building and optimizing
+\emph{multiple} functionally equivalent implementations of the CORFU protocol
+in Ceph, demonstrating that selection of optimization strategies and tuning
+decisions are not static.
 
 \subsection{Software Parameters}
 
+The CORFU protocol stripes a log across a cluster of storage devices that each
+expose a custom 64-bit write-once address space for reading and writing log
+entires. While this interface can be built directly into flash
+devices~\cite{wei:systor13}, our implementation builds on 
+
+
 To illustrate the design space challenge we implemented as an object interface
 the CORFU storage device specification, that is a write-once interface over a
-64-bit address space. The interface is used as a building block of the CORFU
+64-bit address space.
+
+The interface is used as a building block of the CORFU
 protocol to read and write log entries that are striped over an entire
-cluster.  The implementations differ in their optimization strategy of
+cluster.
+
+ The implementations differ in their optimization strategy of
 utilizing internal system interfaces. For instance one implementation uses a
 key-value interface to manage the address space index and entry data, while
 another implementation stores the entry data using a byte-addressable
 interface. 
-
-%\begin{figure}[t]
-%\centering
-%\includegraphics[width=1.0\linewidth]{jewel_v_firefly_pd.png}
-%\caption{Relative performance differences can be drastic after a software
-%    upgrade of the underlying storage system.}
-%\label{fig:phy-design}
-%\end{figure}
 
 Figure~\ref{fig:phy-design} shows the append throughput of four such
 implementations run on two versions of Ceph from 2014 and 2016. The first
