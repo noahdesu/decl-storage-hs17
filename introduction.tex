@@ -33,7 +33,7 @@ of the code-hardened capabilities of the underlying system and avoid
 duplication of complex and error-prone services. By recombining existing
 services in the Ceph storage system, Malacology demonstrated how two
 real-world services, a distributed shared-log and a file system metadata load
-balancer, could be constructed. Unfortunately, implementing
+balancer, could be constructed using a `dirty-slate` approach. Unfortunately, implementing
 applications on top of a system like Malacology can be an ad-hoc process
 that is difficult to reason about and manage.
 
@@ -41,7 +41,7 @@ Despite the powerful approach advocated by Malacology, it requires programmers
 to navigate a complex design space, simultaneously addressing often orthogonal
 concerns including functional correctness, performance, and fault-tolerance.
 Worse still, the domain expertise required to build a performant interface can
-be quickly lost. The use of interface composition in Malacology is sensitve to
+be quickly lost. The use of interface composition in Malacology is sensitive to
 change, and unified storage systems exhibit quickly evolving workloads, and
 frequent software and hardware upgrades.
 

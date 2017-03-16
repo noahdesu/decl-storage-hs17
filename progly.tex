@@ -35,22 +35,21 @@ This has lead to modifications to its architecture or
 API~\cite{balmin:sigmod2012-clydesdale} to improve performance.
 
 Rather than relying on storage systems to evolve \emph{or} applications to
-change, a hybrid approach that embraces interface instability allows maximum
-flexibility, so long as it does not impose an unmanageable burden on
-developers.
+change, a hybrid approach that embraces interface instability without placing
+an unmanageable burden on developers is ``programmable storage".
 
-\subsection{The Malacology Approach}
+\subsection{The Programmable Storage Approach}
 
-Malacology is a recently proposed approach to co-design between applications
-and storage systems that advocates a design strategy called programmable
-storage in which existing storage system services are safely exposed such that
+A programmable storage system helps future programmers co-design applications
+and storage systems by exposing existing internal services so that 
 they can be composed to form application specific
-services~\cite{sevilla:eurosys17}.  Figure~\ref{fig:malacology} shows the
-architecture of Malacology as implemented in Ceph, which exposes a variety of
-low-level internal services such as custom object interfaces, cluster metadata
-management, and load-balancing.  While Ceph natively exposes high-level
-abstractions like file, block, and object, Malacology recombines
-\emph{all} interfaces in Ceph to form new interfaces.
+services~\cite{sevilla:eurosys17}.
+Figure~\ref{fig:malacology} shows the architecture of Malacology, a prototype programmable storage system
+implemented in Ceph, which exposes a variety of low-level internal services
+such as custom object interfaces, cluster metadata management, and
+load-balancing. While Ceph natively exposes file, block, and object
+abstractions, Malacology demonstrated the construction of two real-world
+services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantle}) using only a combination of existing interfaces present in Ceph.
 
 \begin{figure}[t]
 \centering
@@ -60,7 +59,7 @@ abstractions like file, block, and object, Malacology recombines
 \label{fig:malacology}
 \end{figure}
 
-One of these synthesized interfaces is a high-performanced distributed shared
+ZLog is a high-performance distributed shared
 log that implements the CORFU protocol~\cite{balakrishnan:nsdi12}.
 This protocol achieves high-throughput using a soft-state network-attached
 counter, and stripes log content over a cluster of flash devices each with a
@@ -82,4 +81,4 @@ The demonstration of interface synthesis in Malacology suggests a new form of
 application development that significantly reduces the programming surface
 area. While this ability to construct software-defined interfaces is powerful,
 next we will show how access to low-level interfaces can be a double-edged
-sword, providing its power at the cost of maintenance complexity.
+sword, which provides power at the cost of maintenance complexity.
