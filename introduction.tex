@@ -1,12 +1,16 @@
 \section{Introduction}
 \label{sec:intro}
 
-Popular storage systems support a diversity of storage abstractions thereby providing important disaggregation benefits: such \emph{unified} storage systems support standard file, block, and object abstractions so that the same hardware can be used for a larger range and more flexible mix of applications than having a separate  system for each abstraction. 
-As these large-scale unified storage systems evolve to meet the requirements of an increasingly diverse set of applications and next-generation hardware,
-\emph{de jure} approaches of the past---based on standardized interfaces---are
-giving way to domain-specific interfaces and optimizations. While promising,
-current approaches to co-design are based on ad-hoc strategies that are
-untenable.
+Popular storage systems support a diversity of storage abstractions thereby
+providing important disaggregation benefits: such \emph{unified} storage
+systems support standard file, block, and object abstractions so that the same
+hardware can be used for a larger range and more flexible mix of applications
+than having a separate  system for each abstraction.  As these large-scale
+unified storage systems evolve to meet the requirements of an increasingly
+diverse set of applications and next-generation hardware, \emph{de jure}
+approaches of the past---based on standardized interfaces---are giving way to
+domain-specific interfaces and optimizations. While promising, current
+approaches to co-design are based on ad-hoc strategies that are untenable.
 
 The standardization of the POSIX I/O interface has been a major success,
 allowing application developers to avoid vendor lock-in, and storage system
@@ -40,15 +44,15 @@ be quickly lost because interface composition is sensitive to changes in the
 underlying environment such as hardware and software upgrades as well as
 evolving workloads common place in unified storage systems.
 
-To address this challenge we are actively exploring the use of high-level
-declarative languages based on Datalog to program storage interfaces. By specifying
-the functional behavior of a storage interface once in a relational (or
-algebraic language), an optimizer can use a cost model to explore a space of
-functionally equivalent physical implementations. Much like query planning and
-optimization in database systems, this approach will separate the concerns of
-correctness and performance, protecting applications against changes. But
-despite the parallels with database systems, the design space is quite
-different.
+To address these challenges, we advocate for the use of high-level declarative
+languages (e.g. Datalog) as means by which new storage system interfaces are
+programmed. By specifying the functional behavior of a storage interface once
+in a relational (or algebraic language), an optimizer can use a cost model to
+explore a space of functionally equivalent physical implementations. Much like
+query planning and optimization in database systems, this approach will
+separate the concerns of correctness and performance, protecting applications
+against changes. But despite the parallels with database systems, the design
+space is quite different.
 
 In this paper we demonstrate the challenge of programmable storage by showing
 the sensitivity of domain-specific interfaces to changes in the underlying
