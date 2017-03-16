@@ -45,13 +45,12 @@ Malacology is a recently proposed approach to co-design between applications
 and storage systems that advocates a design strategy called programmable
 storage in which existing storage system services are safely exposed such that
 they can be composed to form application specific
-services~\cite{msevilla:eurosys17}.
-Figure~\ref{fig:malacology} shows the architecture of Malacology as
-implemented in Ceph, which exposes a variety of low-level internal services
-such custom object interfaces, cluster metadata management, and
-load-balancing. While Ceph natively exposes file, block, and object
-abstractions, Malacology demonstrated the construction of two real-world
-services using only a combination of existing interfaces present in Ceph.
+services~\cite{sevilla:eurosys17}.  Figure~\ref{fig:malacology} shows the
+architecture of Malacology as implemented in Ceph, which exposes a variety of
+low-level internal services such as custom object interfaces, cluster metadata
+management, and load-balancing.  While Ceph natively exposes high-level
+abstractions like file, block, and object, Malacology recombines
+\emph{all} interfaces in Ceph to form new interfaces.
 
 \begin{figure}[t]
 \centering
@@ -61,21 +60,23 @@ services using only a combination of existing interfaces present in Ceph.
 \label{fig:malacology}
 \end{figure}
 
-One of these synthesized interface is a high-performanced distributed shared
+One of these synthesized interfaces is a high-performanced distributed shared
 log that implements the CORFU protocol~\cite{balakrishnan:nsdi12}.
-This protocol achieves high-throughput
-using a network-attached
-counter for high-frequency log position assignment, and depends on a custom
-storage device interface that exposes a write-once infinite address space that
-is critical to maintaining correctness across faults and reconfiguration.
-Malacology reproduces the CORFU
-network-attached counter service using a capability-based mechanism found in
-the Ceph distributed file system for managing cached metadata. The service
-models the counter state as temporary exclusive access to file metadata.
-The storage device interface in
-CORFU is constructed using a software abstraction that maintains consistency
-across independent low-level Ceph I/O interfaces such as indexes and
-bytestreams.
+This protocol achieves high-throughput using a soft-state network-attached
+counter, and stripes log content over a cluster of flash devices each with a
+protocol-specific storage interface. While CORFU is a stand-alone system,
+Malacology is able to instantiate the same abstraction and approximate 
+the same unique optimizations.
+
+Malacology reproduces the CORFU network-attached counter service using a
+capability-based mechanism found in the Ceph distributed file system for
+managing cached metadata. The service models the counter state as temporary
+exclusive access to file metadata.  The storage device interface in CORFU is
+constructed using application-specific object interfaces in Ceph. These
+software-based interfaces are constructed as a composition of low-level I/O
+interfaces (e.g. an LSM-tree and a bytestream) that operate in an atomic
+context allowing the interface to maintain consistency across native
+interfaces.
 
 The demonstration of interface synthesis in Malacology suggests a new form of
 application development that significantly reduces the programming surface
