@@ -32,11 +32,14 @@
 \centering
 \includegraphics[width=0.95\columnwidth]{Corfu_viz_expanded3.pdf}
 \caption{}
-\label{fig:malacologyx}
+\label{fig:dataflow}
 \end{subfigure}\hfill
 \begin{subfigure}{0.75\columnwidth}
 
 \begin{lstlisting}[title={{\bf (c)}}, label=lst:write, basicstyle=\tiny]
+table :epoch, [:epoch]
+table :log, [:pos] => [:state, :data]
+
 bloom :write do
   temp :valid_write <= write_op.notin(found_op)
   log <+ valid_write{ |o| [o.pos, 'valid', o.data]}
@@ -45,21 +48,17 @@ bloom :write do
   ret <= write_op.notin(valid_write) {|o|
     [o.type, o.pos, o.epoch, 'read-only'] }
 end
-
-bloom :trim do
-  log <+- trim_op{|o| [o.pos, 'trimmed']}
-  ret <=  trim_op{|o|
-    [o.type, o.pos, o.epoch, 'ok']}
-end
 \end{lstlisting}
 \end{subfigure}
-\caption{foo}
+\caption{the logical dataflow could not be more consise and still capture the
+    state machine.}
+\label{fig:pm}
 \end{figure*}
 
-Current ad-hoc approaches to programmable storage restrict use to developers
-with distributed programming expertise, knowledge of the intricacies of the
-underlying storage system and its performance model, and primarily use
-hard-coded imperative methods. This restricts the use of optimizations that
+As we have seen, current ad-hoc approaches to programmable storage restrict
+use to developers with distributed programming expertise, knowledge of the
+intricacies of the underlying storage system and its performance model, and
+use hard-coded imperative methods. This limits the use of optimizations that
 can be performed automatically or derived from static analysis.  Based on the
 challenges we have demonstrated stemming from the dynamic nature and large
 design space of programmable storage, we present an alternative, declarative
@@ -78,19 +77,39 @@ being expressed as a collection of \emph{queries} over a request stream that
 are filtered, transformed, and combined with system state. Next we present a
 brief example of the CORFU shared-log interface expressed using this model.
 
-\subsection{Example: The CORFU Log Interface}
+\subsection{Example: CORFU as a Query}
 
-The CORFU log protocol achieves high-performance in part by striping the log
-across a large number of fast storage devices. Using our declarative language
-we model the log as a single relation, hiding the implementation detail of log
-partitioning. Lines 2-3 in Listing~\ref{lst:corfublm} show the declaration of
-state for the CORFU interface consisting of two persistent collections: one for
-the log data, and one for interface metadata. The mapping of collections onto
-physical storage is abstracted at this level, permitting optimizations
-discussed earlier to be discovered and applied transparently by an optimizer.
-Line 5 defines the write operation as a scratch collection with models
-non-persistent state only valid for the duration of a single time stemp
-allowing an optimizer to treat this state as volatile.
+We model the storage interface of the CORFU protocol as query in our
+declarative langauge in which log data and metadata are represented by two
+persistent collections (Figure~\ref{fig:pm} (c) Lines 1-2).  The mapping of
+collections onto physical storage is abstracted at this level, permitting
+optimizations and implementation details such as log striping and partitioning
+to be discovered and applied transparently by an optimizer.  The declarative
+specification of the CORFU \emph{write} operation is shown on lines 3-10.
+This interface is a write-once 64-bit address space and depends on a method
+for quickly resolving log positions and metadata to physical storage
+addresses.  Since the specification is an invariant across system changes and
+low-level interfaces, specific access methods and the construction of indexes
+can be considered by an optimizer.
+
+Amazingly, only a few code snippets can express the semantics of the entire
+storage interface requirements in CORFU\footnote{Due to space limitations
+refer to \cite{watkins:ucsc-soe-16-12} for a full program listing.}.
+Figure~\ref{fig:corfu-sm} shows the state transition diagram for the CORFU
+storage interface, and Figure~\ref{fig:dataflow} shows the corresponding
+dataflow diagram for the entire CORFU protocol expressed in Bloom that can
+serve as input to an optimizer.  Beyond the convenience of writing less code,
+it is far easier for the programmer writing an interface such as CORFU to
+convenience herself of the correctness of the high-level details of the
+implementation without being distracted by issues related to physical design
+or the many other gotchas that one must deal with when writing low-level
+systems software.
+
+%In addition, the CORFU interface depends on a trim
+%interface to mark unused poritions of the log (shown on lines 10-15) Trimmed
+%entries are tracked as unused for reclamation, and implementations may take
+%advantage of specific optimizations provided by an index implementation or
+%hardware support found in modern non-volatile memories.
 
 %\begin{lstlisting}[caption={Sample \emph{corfu.bloom} program listing}, label=lst:corfublm]
 %bloom :corfu do
@@ -111,15 +130,6 @@ allowing an optimizer to treat this state as volatile.
 %end
 %\end{lstlisting}
 
-The write-once 64-bit address space exposed by CORFU storage devices depends on
-a method for quickly resolving the log position to metadata and physical
-storage addresses. The declarative specification of the write interface shown
-on lines 8-13 is expressed independently of the implementation and any
-optimization strategies.  In addition, the CORFU interface depends on a trim
-interface to mark unused poritions of the log (shown on lines 10-15) Trimmed
-entries are tracked as unused for reclamation, and implementations may take
-advantage of specific optimizations provided by an index implementation or
-hardware support found in modern non-volatile memories.
 
 %\begin{figure}
 %\centering
@@ -128,16 +138,6 @@ hardware support found in modern non-volatile memories.
 %\label{fig:flow}
 %\end{figure}
 
-Amazingly, only a few code snippets can express the semantics of the entire
-storage device interface requirements in CORFU\footnote{Due to space
-limitations refer to \cite{watkins:ucsc-soe-16-12} for a full program
-listing.}.  Figure~\ref{fig:flow} shows the dataflow diagram for the entire
-CORFU program expressed in Bloom that can serve as input to an optimizer.
-Beyond the convenience of writing less code, it is far easier for the
-programmer writing an interface such as CORFU to convenience herself of the
-correctness of the high-level details of the implementation without being
-distracted by issues related to physical design or the many other gotchas that
-one must deal with when writing low-level systems software.
 
 %For reference our prototype implementation of CORFU in Ceph (called
 %ZLog\footnote{https://github.com/noahdesu/zlog}) is written in C++ and the

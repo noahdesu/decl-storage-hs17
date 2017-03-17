@@ -78,7 +78,7 @@ interface implementations.
 
 \begin{figure*}[t]
     \centering
-    \begin{subfigure}[b]{.33\linewidth}
+    \begin{subfigure}[b]{.30\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{jewel_v_firefly_pd.png}
         \caption{}
@@ -86,14 +86,14 @@ interface implementations.
         %upgrade of the underlying storage system.}
         \label{fig:phy-design}
     \end{subfigure}
-    \begin{subfigure}[b]{.33\linewidth}
+    \begin{subfigure}[b]{.30\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{batching.png}
         \caption{}
         %\caption{Total throughput with and without batching.}
         \label{fig:batching}
     \end{subfigure}
-    \begin{subfigure}[b]{.33\linewidth}
+    \begin{subfigure}[b]{.30\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{batching-outlier-detect.png}
         \caption{}
@@ -102,14 +102,15 @@ interface implementations.
         %large I/O requests.}
         \label{fig:batching-outlier}
     \end{subfigure}
-    \caption{(a) relative performance differences can be drastic after storage
-    software upgrade. (b) total throughput with and without batching.  (c)
-    identifying and handling an outlier independently maintains the benefits
+    \caption{(a) relative performance differences are different after storage
+    software upgrade. (b) total throughput with and without batching. (c)
+    identifying and handling an outlier maintains the benefits
     of batching without the performance degradation of unnecessarily large I/O
     requests.}
 \end{figure*}
 
 \subsubsection{Application-specific Group Commit}
+\label{sec:batch}
 
 Group commit is a technique used in database query execution that combines
 multiple transactions in order to amortize over per-transaction fixed costs
