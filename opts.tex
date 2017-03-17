@@ -1,36 +1,35 @@
 \section{Discussion and Conclusion}
 \label{sec:opts}
 
-It's clear that storage systems are currently in the midst of significant
-change and there few guide posts available to developers navigating a very
-large and complex physical design space. This has served as the primary source
-of motivation for the use of declarative languages. And while our
-implementation does not yet map a declarative specification on to a particular
-physical design, the specification provides a powerful infrastructure for
-automating this mapping and achieving other optimizations.
+The current state of the field of storage systems is clearly in the midst of significant
+change. The sparse collection of guide posts capable of assisting developers navigating such a
+large, complex, and ever-evolving physical design space serves as the primary source of 
+motivation for the use of declarative languages as a novel method distancing 
+the dynamic nature of storage systems from the more static nature of higher-level
+applications. While our implementation does not yet map a declarative specification 
+on to a particular physical design, the specification provides a powerful infrastructure for
+automating such a mapping and achieving other optimizations.
 
-Given the declarative nature of the interfaces we have defined, we can draw
-parallels between the physical design challenges described in this paper and
-the large body of mature work in query planning and optimization.  The Bloom
-language that we use as a basis for a declarative specification language
-produces a data flow graph that can be used in static analysis, and we
-envision that this graph will be made fully available to the storage system to
-exploit.
+Given the declarative flavor of the interfaces we have defined, 
+deep parallels exist between the physical design challenges described in this paper and
+the larger body of mature work in query planning and optimization. The Bloom
+language used as a basis for the declarative specification language of our approach
+produces a dataflow graph amenable to sophisticated static analyses. We
+envision the graph will be made fully available for exploitation by the storage system.
 
-We are currently considering the scope of optimizations that are possible with
+We are currently considering the scope of optimizations possible with
 such a dataflow model in the context of storage systems. For instance, without
 semantic knowledge of the interface, batching techniques described in
 Section~\ref{sec:batch} are limited to optimizations such as selecting magic
 values for timers and buffer sizes. Semantic information expands the design
-space, permitted intelligent reordering or coalescing that depends on the
-relationship between operations that goes beyond what auto-tuning has
-considered in a storage system context.
+space and permits intelligent reordering or coalescing with a dependence upon the
+relationship between operations beyond what auto-tuning has considered in a storage system context.
 
-{\bf Conclusion.} With each new application-specific storage interface one
-must consider that the logical conclusion is a future in which little to no
-distinction exists between storage and database systems; or not. But on the
-road to either future intermediate solutions like the one we have proposed are
-necessary to manage complexity and portability.
+{\bf Conclusion.} With each new application-specific storage interface, one
+must consider the logical conclusion as a future in which little to no
+distinction exists between storage and database systems, or not. The roads to both futures
+are lined by intermediate solutions, such as the one we have proposed are, which 
+explore tools and techniques for managing the dual tradeoffs of complexity and portability.
 
 %Looking beyond standard forms of optimization decisions that seek to select
 %an appropriate mix of low-level I/O interfaces, data structure selection is an
