@@ -51,7 +51,7 @@ implemented in Ceph, which exposes a variety of low-level internal services
 such as custom object interfaces, cluster metadata management, and
 load-balancing. While Ceph natively exposes file, block, and object
 abstractions, Malacology demonstrates the construction of two real-world
-services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantle}) using only the composition of existing interfaces present in Ceph.
+services using only the composition of existing interfaces present in Ceph.
 
 \begin{figure}[t]
 \centering
@@ -61,7 +61,7 @@ services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantl
 \label{fig:malacology}
 \end{figure}
 
-ZLog is a high-performance distributed shared
+One of these synthesized interfaces is a high-performance distributed shared
 log that implements the CORFU protocol~\cite{balakrishnan:nsdi12}.
 This protocol achieves high-throughput by using a soft-state network-attached
 counter and stripes log content over a cluster of flash devices exposing
@@ -71,8 +71,8 @@ the same unique optimizations.
 
 Malacology reproduces the CORFU network-attached counter service using a
 capability-based mechanism found in the Ceph distributed file system for
-managing cached metadata. ZLog implements the counter using the metadata server's ability to provide temporary
-exclusive access to a shared resource (in this case, file metadata).  In ZLog, CORFU's storage device interface is
+managing cached metadata. The service implements the counter using the metadata server's ability to provide temporary
+exclusive access to a shared resource (in this case, file metadata). CORFU's storage device interface is
 constructed using application-specific object interfaces in Ceph. These
 software-based interfaces are constructed as a composition of low-level I/O
 interfaces (e.g. an LSM-tree and a bytestream) operating in an atomic
