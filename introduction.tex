@@ -1,11 +1,11 @@
 \section{Introduction}
 \label{sec:intro}
 
-Popular storage systems support a diversity of storage abstractions by
+Popular storage systems support diverse storage abstractions by
 providing important disaggregation benefits. Instead of maintaining
 a separate system for each abstraction, \emph{unified} storage
 systems, in particular, support standard file, block, and object abstractions so the same
-hardware can be used for a larger range and more flexible mix of applications. 
+hardware can be used for a wider range and a more flexible mix of applications. 
 As these large-scale unified storage systems evolve to meet the requirements 
 of an increasingly diverse set of applications and next-generation hardware, \emph{de jure}
 approaches of the past---based on standardized interfaces---are giving way to
@@ -39,19 +39,21 @@ Despite the powerful approach advocated by Malacology, the technique entails nav
 a complex design space and simultaneously addressing often orthogonal
 concerns (e.g. functional correctness, performance, and fault-tolerance).
 Worse still, the availability of domain expertise required to build a performant interface is not a fixed or reliable resource. 
-As a result, interface composition, as utilized in techniques such as Malacology, is sensitive to
-change and the quickly evolving workloads as well as
-frequent software and hardware upgrades characteristic of unified storage systems
-necessitates massive maintenance overheads.
+As a result, interface composition, as utilized in techniques such as the Malacology Approach, is sensitive to
+the change, quickly evolving workloads, and software/hardware upgrades characteristic of unified storage systems.
+This necessitates massive maintenance overheads.
 
 To address these challenges, we advocate for the use of high-level declarative
-languages (e.g. Datalog) as a means of programming new storage system interfaces. 
-By specifying the functional behavior of a storage interface once
-in a relational (or algebraic language), optimizers built around a cost models sensitive
-to storage and access tools and overheads can explore a space of functionally equivalent
-physical implementations. Much like query planning and optimization in database systems, this approach will
-logically differentiate correctness and performance and protect the applicability of higher-level application implementations
-against lower-level system changes. However, despite the parallels with database systems, this paper demonstrates fundamental differences in the optimization design space.
+languages (e.g. Datalog) as a means of programming new storage system
+interfaces.  By specifying the functional behavior of a storage interface once
+in a relational (or algebraic language), optimizers built around cost models
+sensitive to storage and access tools and overheads can explore a space of
+functionally equivalent physical implementations. Much like query planning and
+optimization in database systems, this approach will logically differentiate
+correctness and performance and protect higher-level services from lower-level
+system changes. However, despite the parallels with database systems, this
+paper demonstrates, and begins to address, fundamental differences in the
+optimization design space.
 
 In this paper we demonstrate the challenge of programmable storage by showing
 the sensitivity of domain-specific interfaces to changes in the underlying

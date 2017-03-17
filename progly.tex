@@ -16,16 +16,16 @@ ekanayake:escience2008-eglmapreduce, mihailescu:hotstorage2012-mixapart}.
 deficiency is to change the application itself by adding more data management
 intelligence into the application or as domain-specific middleware. When
 application changes depend on non-standard semantics exposed by the storage
-system (e.g. relaxed POSIX file I/O or MPI-IO hints) the coupling that results
+system (e.g., relaxed POSIX file I/O or MPI-IO hints), the coupling that results
 can be fragile.
-For example, \cite{buck:hpc2011-scihadoop, gkantsidis:nsdi2013-rhea} both do
+For example, SchiHadoop~\cite{buck:hpc2011-scihadoop} and Rhea~\cite{gkantsidis:nsdi2013-rhea} both do
 an excellent jobs of partitioning data in Hadoop applications, but may not
 stand the test of time for future workloads, since the partitioning is
 specific to scientific data.
 
 {\bf Storage modifications.} When these two approaches fail to meet an
 application's needs, developers may turn their attention to any number of
-heavy-weight solutions ranging from changing the storage system itself, up to
+heavyweight solutions ranging from changing the storage system itself, up to
 and including designing entirely new systems. This approach can require
 significant cost, domain knowledge, and extreme care when building or
 modifying critical software that can take years of code-hardening to trust.
@@ -36,9 +36,9 @@ API~\cite{balmin:sigmod2012-clydesdale} to improve performance.
 
 Rather than relying on storage systems to evolve \emph{or} applications to
 change, a hybrid approach that embraces interface instability without placing
-an unmanageable burden on developers is ``programmable storage".
+an unmanageable burden on developers is ``The Malacology Approach".
 
-\subsection{The Programmable Storage Approach}
+\subsection{The Malacology Approach}
 
 %\textcolor{red}{HELP! We can't decide if this section should be called ``The
 %Programmable Storage Approach" or ``The Malacology Approach" -- I argue that
@@ -54,7 +54,7 @@ implemented in Ceph, which exposes a variety of low-level internal services
 such as custom object interfaces, cluster metadata management, and
 load-balancing. While Ceph natively exposes file, block, and object
 abstractions, Malacology demonstrated the construction of two real-world
-services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantle}) using only a combination of existing interfaces present in Ceph.
+services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantle}) using only the composition of existing interfaces present in Ceph.
 
 \begin{figure}[t]
 \centering
@@ -74,8 +74,8 @@ the same unique optimizations.
 
 Malacology reproduces the CORFU network-attached counter service using a
 capability-based mechanism found in the Ceph distributed file system for
-managing cached metadata. The service models the counter state as temporary
-exclusive access to file metadata.  The storage device interface in CORFU is
+managing cached metadata. ZLog implements the counter using the metadata server's ability to provide temporary
+exclusive access to a shared resource (in this case, file metadata).  In ZLog, CORFU's storage device interface is
 constructed using application-specific object interfaces in Ceph. These
 software-based interfaces are constructed as a composition of low-level I/O
 interfaces (e.g. an LSM-tree and a bytestream) that operate in an atomic
@@ -83,7 +83,7 @@ context allowing the interface to maintain consistency across native
 interfaces.
 
 The demonstration of interface synthesis in Malacology suggests a new form of
-application development that significantly reduces the programming surface
-area. While this ability to construct software-defined interfaces is powerful,
+application development that significantly reduces the number of lines of code.
+While this ability to construct software-defined interfaces is powerful,
 next we will show how access to low-level interfaces can be a double-edged
-sword, which provides power at the cost of maintenance complexity.
+sword, which provides power at the cost of increased maintenance complexity.
