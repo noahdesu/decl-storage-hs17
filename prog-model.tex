@@ -58,51 +58,49 @@ end
 As we have seen, current ad-hoc approaches to programmable storage restrict
 use to developers with distributed programming expertise, knowledge of the
 intricacies of the underlying storage system and its performance model, and
-use hard-coded imperative methods. This limits the use of optimizations that
-can be performed automatically or derived from static analysis.  Based on the
-challenges we have demonstrated stemming from the dynamic nature and large
-design space of programmable storage, we present an alternative, declarative
-programming model that can reduce the learning curve for new users, and allow
-existing developers to increase productivity by writing less code that is more
-portable.
+use of hard-coded imperative methods. This limits the potential for automatic optimizations or
+optimizations derived from static analysis. Based on the challenges demonstrated in the preceding section
+ stemming from the dynamic nature and large design space of programmable storage, 
+ we present an alternative, declarative programming model capable of reducing the learning curve
+ for new users and allowing existing developers to increase productivity by writing less code
+manifesting a high degree of portability.
 
-The model we propose corresponds to a subset of the Bloom language which is a
-declarative language for expressing distributed programs as an unordered set
+The model we propose corresponds to a subset of the Bloom programming language. 
+Bloom which is a declarative language for expressing distributed programs as an unordered set
 of rules~\cite{alvaro:cidr11}. These rules fully specify program semantics and
-allow a programmer to ignore the details associated with how a program is
-evaluated. This level of abstraction is attractive for building storage
-interfaces whose portability and correctness is critical. We model the
-storage system state uniformly as a collection of relations, with interfaces
-being expressed as a collection of \emph{queries} over a request stream that
-are filtered, transformed, and combined with system state. Next we present a
-brief example of the CORFU shared-log interface expressed using this model.
+allow a programmer to ignore the precise details associated with program evaluation. 
+This level of abstraction is attractive for building storage
+interfaces in which characteristics such as portability and correctness are critical. We model the
+storage system state uniformly as a collection of relations, with interfaces expressed as a collection
+of \emph{queries} over a request stream. The queries are filtered, transformed, and combined with the underlying
+system state. Next we present a brief example of the CORFU shared-log interface expressed using this model.
 
 \subsection{Example: CORFU as a Query}
 
 We model the storage interface of the CORFU protocol as query in our
-declarative langauge in which log data and metadata are represented by two
+declarative language in which log data and metadata are represented by two
 persistent collections (Figure~\ref{fig:pm} (c) Lines 1-2).  The mapping of
-collections onto physical storage is abstracted at this level, permitting
-optimizations and implementation details such as log striping and partitioning
-to be discovered and applied transparently by an optimizer.  The declarative
+collections onto physical storage is abstracted at this level. Such a transformation
+permits optimizations and implementation details such as log striping and partitioning
+to be discovered and applied transparently by an optimizer. The declarative
 specification of the CORFU \emph{write} operation is shown on lines 3-10.
 This interface is a write-once 64-bit address space and depends on a method
 for quickly resolving log positions and metadata to physical storage
-addresses.  Since the specification is an invariant across system changes and
-low-level interfaces, specific access methods and the construction of indexes
-can be considered by an optimizer.
+addresses. Since the specification is invariant across system changes and
+low-level interfaces, an integrated optimizer can automatically render execution decisions 
+and build indexes based upon the performance characteristics of specific access methods.
 
-Amazingly, only a few code snippets can express the semantics of the entire
-storage interface requirements in CORFU\footnote{Due to space limitations
-refer to \cite{watkins:ucsc-soe-16-12} for a full program listing.}.
+Amazingly, the semantics of the entire storage interface requirements in CORFU\footnote{Due to space limitations
+refer to \cite{watkins:ucsc-soe-16-12} for a full program listing.} are expressible in only a few Bloom code snippets.
 Figure~\ref{fig:corfu-sm} shows the state transition diagram for the CORFU
-storage interface, and Figure~\ref{fig:dataflow} shows the corresponding
-dataflow diagram for the entire CORFU protocol expressed in Bloom that can
-serve as input to an optimizer.  Beyond the convenience of writing less code,
-it is far easier for the programmer writing an interface such as CORFU to
-convenience herself of the correctness of the high-level details of the
-implementation without being distracted by issues related to physical design
-or the many other gotchas that one must deal with when writing low-level
+storage interface and Figure~\ref{fig:dataflow} shows the corresponding
+dataflow diagram for the entire CORFU protocol expressed in Bloom. The program can
+serve as input to an optimizer. Beyond the convenience of writing less code,
+the entire experience of designing and writing an interface such as CORFU in 
+a declarative language such as Bloom eases the process of composing 
+convincingly correct implementations. Specifically, the high-level details of the
+implementation mask distracting issues related to the physical design
+and the many other ``gotchas'' associated with writing low-level
 systems software.
 
 %In addition, the CORFU interface depends on a trim
