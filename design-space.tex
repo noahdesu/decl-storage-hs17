@@ -2,9 +2,9 @@
 \label{sec:dspace}
 
 The narrow interface exposed by storage systems has been a boon in allowing
-systems and applications to evolve independently, in affect limiting the size
+systems and applications to evolve independently, in effect limiting the size
 of the design space where applications couple with storage. Programmable
-storage lifts the veil on the system, and with it, forces applications developers
+storage lifts the veil on the system, and with it, forces developers of higher-level services
 to confront a large and expanding set of possible designs.
 
 In this section we elucidate the matter of design space size and complexity in
@@ -78,7 +78,7 @@ interface implementations.
 
 \begin{figure*}[t]
     \centering
-    \begin{subfigure}[b]{.33\linewidth}
+    \begin{subfigure}[b]{.30\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{jewel_v_firefly_pd.png}
         \caption{}
@@ -86,14 +86,14 @@ interface implementations.
         %upgrade of the underlying storage system.}
         \label{fig:phy-design}
     \end{subfigure}
-    \begin{subfigure}[b]{.33\linewidth}
+    \begin{subfigure}[b]{.30\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{batching.png}
         \caption{}
         %\caption{Total throughput with and without batching.}
         \label{fig:batching}
     \end{subfigure}
-    \begin{subfigure}[b]{.33\linewidth}
+    \begin{subfigure}[b]{.30\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{batching-outlier-detect.png}
         \caption{}
@@ -102,14 +102,15 @@ interface implementations.
         %large I/O requests.}
         \label{fig:batching-outlier}
     \end{subfigure}
-    \caption{(a) relative performance differences can be drastic after storage
-    software upgrade. (b) total throughput with and without batching.  (c)
-    identifying and handling an outlier independently maintains the benefits
+    \caption{(a) relative performance differences are different after storage
+    software upgrade. (b) total throughput with and without batching. (c)
+    identifying and handling an outlier maintains the benefits
     of batching without the performance degradation of unnecessarily large I/O
     requests.}
 \end{figure*}
 
 \subsubsection{Application-specific Group Commit}
+\label{sec:batch}
 
 Group commit is a technique used in database query execution that combines
 multiple transactions in order to amortize over per-transaction fixed costs
@@ -143,9 +144,9 @@ the magnitude of the outlier in the batch increases. In contrast, an
 and handle them independently, resulting in only a slight decrease in
 performance over the best case.
 
-\textbf{Takeaway:} Choosing the best implementation of a storage interface is
-dependent on the timing of development (Ceph version), the expertise of
-programmers and administrators (Ceph features), tuning parameters and hardware
+\textbf{Takeaway:} Choosing the best implementation of a storage interface
+depends on the timing of development (Ceph version), the expertise of
+programmers and administrators (Ceph features), the tuning parameters and hardware
 selection, as well as system-level and application-specific workload changes.
 A direct consequence of such a large design space is that engineers are forced
 to duplicate efforts when hardware and software characteristics change. This

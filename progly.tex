@@ -1,9 +1,7 @@
 \section{Programmable Storage}
 \label{sec:progly}
 
-When application requirements are not met by an underlying storage system the
-most common approach is to design workarounds that roughly fall into one
-of three categories:
+The most common approaches for designing workarounds capable of handling application requirements not met by an underlying storage system roughly fall into among three categories:
 
 {\bf Extra services.} ``Bolt-on'' services are intended to improve performance
 or enable a feature, but come at the expense of additional hardware, software
@@ -12,20 +10,20 @@ For instance, such classes of limitations inspired many extensions to Hadoop
 ~\cite{bu:vldb2010-haloop, ekanayake:hpdc2010-twister,
 ekanayake:escience2008-eglmapreduce, mihailescu:hotstorage2012-mixapart}.
 
-{\bf Application changes.} Change the underlying application with the addition of
+{\bf Application changes.} Changing the underlying application with the addition of
  more data management intelligence or via the integration of domain-specific middleware
  represents another popular option for adapting to storage system deficiencies. 
- When application changes depend on non-standard semantics exposed by the storage
-system (e.g. relaxed POSIX file I/O or MPI-IO hints) resulting the coupling 
+ When application adjustments depend on non-standard semantics exposed by the storage
+system (e.g. relaxed POSIX file I/O or MPI-IO hints) the resulting coupling 
 can be fragile.
-For example, both \cite{buck:hpc2011-scihadoop, gkantsidis:nsdi2013-rhea} do
+For example, both SchiHadoop~\cite{buck:hpc2011-scihadoop} and Rhea~\cite{gkantsidis:nsdi2013-rhea} do
 an excellent jobs of partitioning data in Hadoop applications, but may not
 withstand the test of time for future workloads, since the partitioning is
 specific to scientific data.
 
 {\bf Storage modifications.} When these two approaches fail to meet an
 application's needs, developers may turn their attention to any number of
-heavy-weight solutions ranging from changing the storage system itself, up to
+heavyweight solutions ranging from changing the storage system itself, up to
 and including designing entirely new systems. This approach can require
 significant cost, domain knowledge, and extreme care when building or
 modifying critical software that can take years of code-hardening to trust.
@@ -35,27 +33,25 @@ Systems builder achieve performance improvement by modifying the underlying
 architecture or API~\cite{balmin:sigmod2012-clydesdale}.
 
 Rather than relying on storage systems to evolve or applications to
-change, the novel technique of ``programmable storage"
-manifests a hybrid approach which embraces interface instability without placing
+change, the ``Malacology Approach''
+manifests a hybrid technique which embraces interface instability without placing
 an unmanageable burden on developers.
 
-\subsection{The Programmable Storage Approach}
+\subsection{The Malacology Approach}
 
 %\textcolor{red}{HELP! We can't decide if this section should be called ``The
 %Programmable Storage Approach" or ``The Malacology Approach" -- I argue that
 %Malacology is the prototype but Noah thinks Malacology Approach makes more
 %sense.}
 
-A programmable storage system helps future programmers co-design applications
-and storage systems by exposing existing internal services so that 
-they can be composed to form application specific
-services~\cite{sevilla:eurosys17}.
+Programmable storage systems improve the development experience over the lifecycles of long-lived and co-designed applications
+and storage systems by exposing a number of existing internal services capable of principled composition. Importantly, the compositionality of the internal functionality aids in the development of higher-level application specific services~\cite{sevilla:eurosys17}.
 Figure~\ref{fig:malacology} shows the architecture of Malacology, a prototype programmable storage system
 implemented in Ceph, which exposes a variety of low-level internal services
 such as custom object interfaces, cluster metadata management, and
 load-balancing. While Ceph natively exposes file, block, and object
-abstractions, Malacology demonstrated the construction of two real-world
-services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantle}) using only a combination of existing interfaces present in Ceph.
+abstractions, Malacology demonstrates the construction of two real-world
+services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantle}) using only the composition of existing interfaces present in Ceph.
 
 \begin{figure}[t]
 \centering
@@ -67,24 +63,24 @@ services (ZLog~\cite{watkins:ucsc-soe-16-12} and Mantle~\cite{sevilla:sc15-mantl
 
 ZLog is a high-performance distributed shared
 log that implements the CORFU protocol~\cite{balakrishnan:nsdi12}.
-This protocol achieves high-throughput using a soft-state network-attached
-counter, and stripes log content over a cluster of flash devices each with a
-protocol-specific storage interface. While CORFU is a stand-alone system,
+This protocol achieves high-throughput by using a soft-state network-attached
+counter and stripes log content over a cluster of flash devices exposing
+protocol-specific storage interfaces. While CORFU is a stand-alone system,
 Malacology is able to instantiate the same abstraction and approximate 
 the same unique optimizations.
 
 Malacology reproduces the CORFU network-attached counter service using a
 capability-based mechanism found in the Ceph distributed file system for
-managing cached metadata. The service models the counter state as temporary
-exclusive access to file metadata.  The storage device interface in CORFU is
+managing cached metadata. ZLog implements the counter using the metadata server's ability to provide temporary
+exclusive access to a shared resource (in this case, file metadata).  In ZLog, CORFU's storage device interface is
 constructed using application-specific object interfaces in Ceph. These
 software-based interfaces are constructed as a composition of low-level I/O
-interfaces (e.g. an LSM-tree and a bytestream) that operate in an atomic
-context allowing the interface to maintain consistency across native
+interfaces (e.g. an LSM-tree and a bytestream) operating in an atomic
+context. The technique allows the interface to maintain consistency across native
 interfaces.
 
 The demonstration of interface synthesis in Malacology suggests a new form of
-application development that significantly reduces the programming surface
-area. While this ability to construct software-defined interfaces is powerful,
-next we will show how access to low-level interfaces can be a double-edged
-sword, which provides power at the cost of maintenance complexity.
+application development capable of significantly reducing the number of lines of code associated with a higher-level application.
+While such an ability to construct software-defined interfaces is powerful,
+subsequent analyses demonstrate how access to low-level interfaces can be a double-edged
+sword providing extended application development powers at the cost of increased maintenance complexity.
