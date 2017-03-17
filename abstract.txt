@@ -18,6 +18,6 @@ result, interface composition is sensitive to the change, quickly evolving workl
 and software/hardware upgrades characteristic of unified storage systems.
 
 To address these challenges, we advocate for the use of high-level declarative
-languages (e.g. Datalog) as a means of programming new storage system interfaces. We
+languages as a means of programming new storage system interfaces. We
 observe that despite the parallels with database systems, this paper demonstrates, and
 begins to address, fundamental differences in the optimization design space.
