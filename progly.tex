@@ -18,7 +18,7 @@ ekanayake:escience2008-eglmapreduce, mihailescu:hotstorage2012-mixapart}.
  When application adjustments depend on non-standard semantics exposed by the storage
 system (e.g. relaxed POSIX file I/O or MPI-IO hints) the resulting coupling 
 can be fragile.
-For example, both SchiHadoop~\cite{buck:hpc2011-scihadoop} and Rhea~\cite{gkantsidis:nsdi2013-rhea} do
+For example, both SciHadoop~\cite{buck:hpc2011-scihadoop} and Rhea~\cite{gkantsidis:nsdi2013-rhea} do
 an excellent jobs of partitioning data in Hadoop applications, but may not
 withstand the test of time for future workloads, since the partitioning is
 specific to the use case.
@@ -77,7 +77,7 @@ exclusive access to a shared resource (in this case, file metadata). CORFU's sto
 constructed using application-specific object interfaces in Ceph. These
 software-based interfaces are constructed as a composition of low-level I/O
 interfaces (e.g. an LSM-tree and a bytestream) operating in an atomic
-context. The technique allows the interface to maintain consistency across native
+context, allowing the interface to maintain consistency of updates across native
 interfaces.
 
 The demonstration of interface synthesis in Malacology suggests a new form of

@@ -37,12 +37,26 @@ in Ceph required to fully exploit the performance profile of NVMe, persistent
 memory, and RDMA networks will likely result in new design trade-offs for
 application-specific interfaces.
 
-\textbf{Takeaway:} The ever-evolving space of hardware and system tunables presents a challenge
+Evolving hardware and system tunables presents a challenge in optimizing
+systems, even in static cases with fixed workloads. Programmable storage
+approaches that introduce application-specific interfaces that are sensitive
+to changes in workloads and the cost models of low-level interfaces that are
+subject to change  greatly increase the design space and set of concerns to be
+addressed by programmers.
+
+\textbf{Takeaway:} Evolving hardware and system tunables presents a challenge
 in optimizing systems, even in static cases with fixed workloads. Programmable
-storage approaches introduce application-specific interfaces sensitive to changes in workloads and 
-guided by cost models integrating low-level interface performance considerations.
-In particular, the low-level performance considerations promise to significantly increase the design space and set of
-concerns to be addressed by programmers.
+storage approaches that introduce application-specific interfaces which are
+sensitive to changes in workloads, and sensitive to the cost models of
+low-level interfaces that are subject to change, greatly increase the design
+space and set of concerns to be addressed by programmers.
+
+%\textbf{Takeaway:} The ever-evolving space of hardware and system tunables presents a challenge
+%in optimizing systems, even in static cases with fixed workloads. Programmable
+%storage approaches introduce application-specific interfaces sensitive to changes in workloads and 
+%guided by cost models integrating low-level interface performance considerations.
+%In particular, the low-level performance considerations promise to significantly increase the design space and set of
+%concerns to be addressed by programmers.
 
 \subsection{Software}
 
@@ -121,7 +135,7 @@ is attributed to a reduction in average per-request costs related to network
 round-trips. Compared with the \emph{Basic-Batch} case, the \emph{Opt-Batch}
 implementation is able to achieve significantly higher performance by
 constructing more efficient I/O requests using range queries and data sieving
-techniques~\cite{x} afforded by the low-level I/O interfaces.
+techniques~\cite{750599} afforded by the low-level I/O interfaces.
 
 The batched execution technique of group commit can significantly increase
 throughput, but the story is much more complex. The ability to apply this
