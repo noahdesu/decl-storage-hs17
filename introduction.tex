@@ -1,27 +1,25 @@
 \section{Introduction}
 \label{sec:intro}
 
-Popular storage systems support a diversity of storage abstractions thereby
-providing important disaggregation benefits: such \emph{unified} storage
-systems support standard file, block, and object abstractions so that the same
-hardware can be used for a larger range and more flexible mix of applications
-than having a separate  system for each abstraction.  As these large-scale
-unified storage systems evolve to meet the requirements of an increasingly
-diverse set of applications and next-generation hardware, \emph{de jure}
+Popular storage systems support a diversity of storage abstractions by
+providing important disaggregation benefits. Instead of maintaining
+a separate system for each abstraction, \emph{unified} storage
+systems, in particular, support standard file, block, and object abstractions so the same
+hardware can be used for a larger range and more flexible mix of applications. 
+As these large-scale unified storage systems evolve to meet the requirements 
+of an increasingly diverse set of applications and next-generation hardware, \emph{de jure}
 approaches of the past---based on standardized interfaces---are giving way to
-domain-specific interfaces and optimizations. While promising, current
-approaches to co-design are based on ad-hoc strategies that are untenable.
+domain-specific interfaces and optimizations. While promising, the ad-hoc strategies characteristic of 
+current approaches to co-design are untenable.
 
-The standardization of the POSIX I/O interface has been a major success,
-allowing application developers to avoid vendor lock-in, and storage system
-designers to innovate independently.
-However, large-scale storage systems have been
-dominated by proprietary offerings, preventing exploration of alternative
-interfaces. Recently we have seen an increase
-in the number of special-purpose storage systems, including high-performance
-open-source storage systems that are modifiable, enabling system changes
-without fear of vendor lock-in. Unfortunately, evolving storage system
-interfaces is a challenging task that involves domain expertise and requires
+The standardization of the POSIX I/O interface has been a major success. General adoption
+allows application developers to avoid vendor lock-in and encourages storage system
+designers to innovate independently. However, large-scale storage systems are generally dominated 
+by proprietary offerings, preventing exploration of alternative
+interfaces. An increase in the number of special-purpose storage systems characterizes recent history
+in the field, including the emergence of high-performance, and highly modifiable, open-source storage systems, 
+which enable system changes without of vendor lock-in. Unfortunately, evolving storage system
+interfaces is a challenging task requiring domain expertise and predicated on the willingness of
 programmers to forfeit the protection from change afforded by narrow
 interfaces.
 
@@ -31,34 +29,33 @@ approach is based on exposing low-level functionality as reusable building
 blocks, allowing developers to custom-fit their applications to take advantage
 of the code-hardened capabilities of the underlying system and avoid
 duplication of complex and error-prone services. By recombining existing
-services in the Ceph storage system, Malacology demonstrated how two
+services in the Ceph storage system, Malacology demonstrates how two
 real-world services, a distributed shared-log and a file system metadata load
 balancer, could be constructed using a `dirty-slate` approach. Unfortunately, implementing
 applications on top of a system like Malacology can be an ad-hoc process
 that is difficult to reason about and manage.
 
-Despite the powerful approach advocated by Malacology, it requires programmers
-to navigate a complex design space, simultaneously addressing often orthogonal
-concerns including functional correctness, performance, and fault-tolerance.
-Worse still, the domain expertise required to build a performant interface can
-be quickly lost. The use of interface composition in Malacology is sensitive to
-change, and unified storage systems exhibit quickly evolving workloads, and
-frequent software and hardware upgrades.
+Despite the powerful approach advocated by Malacology, the technique entails navigating 
+a complex design space and simultaneously addressing often orthogonal
+concerns (e.g. functional correctness, performance, and fault-tolerance).
+Worse still, the availability of domain expertise required to build a performant interface is not a fixed or reliable resource. 
+As a result, interface composition, as utilized in techniques such as Malacology, is sensitive to
+change and the quickly evolving workloads as well as
+frequent software and hardware upgrades characteristic of unified storage systems
+necessitates massive maintenance overheads.
 
 To address these challenges, we advocate for the use of high-level declarative
-languages (e.g. Datalog) as a means by which new storage system interfaces are
-programmed. By specifying the functional behavior of a storage interface once
-in a relational (or algebraic language), an optimizer can use a cost model to
-explore a space of functionally equivalent physical implementations. Much like
-query planning and optimization in database systems, this approach will
-separate the concerns of correctness and performance, protecting applications
-against changes. But despite the parallels with database systems, the design
-space for optimization is quite different, which we demonstrate, and begin to
-address in this paper.
+languages (e.g. Datalog) as a means of programming new storage system interfaces. 
+By specifying the functional behavior of a storage interface once
+in a relational (or algebraic language), optimizers built around a cost models sensitive
+to storage and access tools and overheads can explore a space of functionally equivalent
+physical implementations. Much like query planning and optimization in database systems, this approach will
+logically differentiate correctness and performance and protect the applicability of higher-level application implementations
+against lower-level system changes. However, despite the parallels with database systems, this paper demonstrates fundamental differences in the optimization design space.
 
 In this paper we demonstrate the challenge of programmable storage by showing
 the sensitivity of domain-specific interfaces to changes in the underlying
 system. We then show that the relational model is able to capture the
 functional behavior of a popular shared-log service, and finally we explore
-additional optimizations that can be utilized to expand the space of
+additional optimizations capable of expanding the space of
 possible implementations.
