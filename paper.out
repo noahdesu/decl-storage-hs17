@@ -1,11 +1,10 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Programmable Storage}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{The Programmable Storage Approach}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.1}{The Malacology Approach}{section.2}% 3
 \BOOKMARK [1][-]{section.3}{Design Space}{}% 4
 \BOOKMARK [2][-]{subsection.3.1}{System Tunables and Hardware}{section.3}% 5
 \BOOKMARK [2][-]{subsection.3.2}{Software}{section.3}% 6
 \BOOKMARK [3][-]{subsubsection.3.2.1}{Application-specific Group Commit}{subsection.3.2}% 7
 \BOOKMARK [1][-]{section.4}{Declarative Programmable Storage}{}% 8
-\BOOKMARK [2][-]{subsection.4.1}{Example: The CORFU Log Interface}{section.4}% 9
-\BOOKMARK [1][-]{section.5}{Discussion}{}% 10
-\BOOKMARK [1][-]{section.6}{Conclusion}{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{Example: CORFU as a Query}{section.4}% 9
+\BOOKMARK [1][-]{section.5}{Discussion and Conclusion}{}% 10
