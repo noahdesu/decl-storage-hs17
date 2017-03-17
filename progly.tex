@@ -8,19 +8,19 @@ of three categories:
 {\bf Extra services.} ``Bolt-on'' services are intended to improve performance
 or enable a feature, but come at the expense of additional hardware, software
 sub-systems, and dependencies that must be managed, as well as trusted.
-For instance, many extensions to Hadoop have been created to address its
-limitations~\cite{bu:vldb2010-haloop, ekanayake:hpdc2010-twister,
+For instance, such classes of limitations inspired many extensions to Hadoop
+~\cite{bu:vldb2010-haloop, ekanayake:hpdc2010-twister,
 ekanayake:escience2008-eglmapreduce, mihailescu:hotstorage2012-mixapart}.
 
-{\bf Application changes.} The second approach to adapting to a storage system
-deficiency is to change the application itself by adding more data management
-intelligence into the application or as domain-specific middleware. When
-application changes depend on non-standard semantics exposed by the storage
-system (e.g. relaxed POSIX file I/O or MPI-IO hints) the coupling that results
+{\bf Application changes.} Change the underlying application with the addition of
+ more data management intelligence or via the integration of domain-specific middleware
+ represents another popular option for adapting to storage system deficiencies. 
+ When application changes depend on non-standard semantics exposed by the storage
+system (e.g. relaxed POSIX file I/O or MPI-IO hints) resulting the coupling 
 can be fragile.
-For example, \cite{buck:hpc2011-scihadoop, gkantsidis:nsdi2013-rhea} both do
+For example, both \cite{buck:hpc2011-scihadoop, gkantsidis:nsdi2013-rhea} do
 an excellent jobs of partitioning data in Hadoop applications, but may not
-stand the test of time for future workloads, since the partitioning is
+withstand the test of time for future workloads, since the partitioning is
 specific to scientific data.
 
 {\bf Storage modifications.} When these two approaches fail to meet an
@@ -31,12 +31,13 @@ significant cost, domain knowledge, and extreme care when building or
 modifying critical software that can take years of code-hardening to trust.
 For example, HDFS fails to meet many needs 
 of metadata-intensive workloads~\cite{shvachko:login2012-hdfs-scalability}.
-This has lead to modifications to its architecture or
-API~\cite{balmin:sigmod2012-clydesdale} to improve performance.
+Systems builder achieve performance improvement by modifying the underlying
+architecture or API~\cite{balmin:sigmod2012-clydesdale}.
 
-Rather than relying on storage systems to evolve \emph{or} applications to
-change, a hybrid approach that embraces interface instability without placing
-an unmanageable burden on developers is ``programmable storage".
+Rather than relying on storage systems to evolve or applications to
+change, the novel technique of ``programmable storage"
+manifests a hybrid approach which embraces interface instability without placing
+an unmanageable burden on developers.
 
 \subsection{The Programmable Storage Approach}
 

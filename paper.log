@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  16 MAR 2017 17:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  16 MAR 2017 18:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -611,7 +611,7 @@ File: lstlang1.sty 2014/09/06 1.5e listings language file
 (/usr/local/texlive/2015/texmf-dist/tex/latex/listings/lstlang2.sty
 File: lstlang2.sty 2014/09/06 1.5e listings language file
 )
-No file paper.aux.
+(./paper.aux)
 \openout1 = `paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
@@ -629,7 +629,7 @@ LaTeX Font Info:    ... okay on input line 48.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 48.
 LaTeX Font Info:    ... okay on input line 48.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 48.
-(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+ (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 \big@size=\dimen170
@@ -682,6 +682,8 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 48.
 LaTeX Info: Redefining \pageref on input line 48.
 LaTeX Info: Redefining \nameref on input line 48.
+
+(./paper.out) (./paper.out)
 \@outlinefile=\write5
 \openout5 = `paper.out'.
 
@@ -731,16 +733,14 @@ Overfull \hbox (40.16374pt too wide) in paragraph at lines 66--66
 
 (./introduction.tex
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 28.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 26.
 
 
 LaTeX Warning: Citation `sevilla:eurosys17' on page 1 undefined on input line 2
-8.
+6.
 
-) (./progly.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [1{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+) (./progly.tex [1{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pd
+ftex.map}
 
 
 ]
@@ -778,35 +778,31 @@ nput line 35.
 
 
 LaTeX Warning: Citation `sevilla:eurosys17' on page 2 undefined on input line 5
-1.
-
-
-LaTeX Warning: Reference `fig:malacology' on page 2 undefined on input line 52.
-
+2.
 
 
 LaTeX Warning: Citation `watkins:ucsc-soe-16-12' on page 2 undefined on input l
-ine 57.
+ine 58.
 
 
 LaTeX Warning: Citation `sevilla:sc15-mantle' on page 2 undefined on input line
- 57.
+ 58.
 
-<implementation-overview.png, id=17, 881.2925pt x 414.54875pt>
+<implementation-overview.png, id=61, 881.2925pt x 414.54875pt>
 File: implementation-overview.png Graphic file (type png)
 
 <use implementation-overview.png>
-Package pdftex.def Info: implementation-overview.png used on input line 61.
+Package pdftex.def Info: implementation-overview.png used on input line 62.
 (pdftex.def)             Requested size: 225.84375pt x 106.23038pt.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 
 
 LaTeX Warning: Citation `balakrishnan:nsdi12' on page 2 undefined on input line
- 68.
+ 69.
 
 
-Underfull \hbox (badness 1342) in paragraph at lines 75--84
+Underfull \hbox (badness 1342) in paragraph at lines 76--85
 \OT1/ptm/m/n/10 counter ser-vice us-ing a capability-based mech-a-nism
  []
 
@@ -816,26 +812,26 @@ LaTeX Warning: Citation `behzad:sc2013-autotuning' on page 3 undefined on input
  line 25.
 
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
 LaTeX Warning: Citation `wei:systor13' on page 3 undefined on input line 59.
 
-
-LaTeX Warning: Reference `fig:phy-design' on page 3 undefined on input line 67.
-
-
-<jewel_v_firefly_pd.png, id=28, 433.62pt x 289.08pt>
+<jewel_v_firefly_pd.png, id=70, 433.62pt x 289.08pt>
 File: jewel_v_firefly_pd.png Graphic file (type png)
 
 <use jewel_v_firefly_pd.png>
 Package pdftex.def Info: jewel_v_firefly_pd.png used on input line 83.
 (pdftex.def)             Requested size: 155.02pt x 103.3453pt.
- <batching.png, id=29, 411.6981pt x 276.5532pt>
+ <batching.png, id=71, 411.6981pt x 276.5532pt>
 File: batching.png Graphic file (type png)
 
 <use batching.png>
 Package pdftex.def Info: batching.png used on input line 91.
 (pdftex.def)             Requested size: 155.02pt x 104.13339pt.
 
-<batching-outlier-detect.png, id=30, 411.6981pt x 276.5532pt>
+<batching-outlier-detect.png, id=72, 411.6981pt x 276.5532pt>
 File: batching-outlier-detect.png Graphic file (type png)
 
 <use batching-outlier-detect.png>
@@ -843,14 +839,7 @@ Package pdftex.def Info: batching-outlier-detect.png used on input line 98.
 (pdftex.def)             Requested size: 155.02pt x 104.13339pt.
 
 
-LaTeX Warning: Reference `fig:batching' on page 3 undefined on input line 116.
-
-
 LaTeX Warning: Citation `x' on page 3 undefined on input line 125.
-
-
-LaTeX Warning: Reference `fig:batching-outlier' on page 3 undefined on input li
-ne 136.
 
 [3]) (./prog-model.tex
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
@@ -862,7 +851,7 @@ Overfull \hbox (8.24301pt too wide) in paragraph at lines 27--28
  [][] 
  []
 
-<Corfu_viz_expanded3.pdf, id=38, 1684.2925pt x 1373.13pt>
+<Corfu_viz_expanded3.pdf, id=80, 1684.2925pt x 1373.13pt>
 File: Corfu_viz_expanded3.pdf Graphic file (type pdf)
 
 <use Corfu_viz_expanded3.pdf>
@@ -880,17 +869,17 @@ LaTeX Font Info:    Font shape `OML/ptm/m/n' in size <5> not available
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <5> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 42.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 LaTeX Warning: Citation `alvaro:cidr11' on page 4 undefined on input line 72.
 
 
 LaTeX Warning: Reference `lst:corfublm' on page 4 undefined on input line 86.
 
-[4 <./jewel_v_firefly_pd.png> <./batching.png> <./batching-outlier-detect.png>]
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4 <./jewel_v_firefly_pd.png> <./batching.png> <./batching-outlier-detect.png>
+]
 Underfull \hbox (badness 1852) in paragraph at lines 114--123
 []\OT1/ptm/m/n/10 The write-once 64-bit ad-dress space ex-posed by
  []
@@ -907,43 +896,29 @@ ine 134.
 
 LaTeX Warning: Reference `fig:flow' on page 5 undefined on input line 134.
 
-) (./opts.tex
-
-LaTeX Warning: Reference `sec:dspace' on page 5 undefined on input line 15.
-
-)
+) (./opts.tex [5 <./Corfu_viz_expanded3.pdf>])
 No file paper.bbl.
-[5 <./Corfu_viz_expanded3.pdf>]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 88.
- [6
+[6
 
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 88.
  (./paper.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 88.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 88.
+Package rerunfilecheck Info: File `paper.out' has not changed.
+(rerunfilecheck)             Checksum: 9E02EC1DA14BAAE556764A01374CFB03;697.
 
-
-Package rerunfilecheck Warning: File `paper.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `paper.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  9E02EC1DA14BAAE556764A01374CFB03;697.
 
 LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 88.
  ) 
 Here is how much of TeX's memory you used:
- 18775 strings out of 493089
- 366129 string characters out of 6134842
+ 18793 strings out of 493089
+ 366342 string characters out of 6134842
  506697 words of memory out of 5000000
- 21886 multiletter control sequences out of 15000+600000
+ 21898 multiletter control sequences out of 15000+600000
  48485 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,14n,71p,428b,1498s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -954,10 +929,10 @@ ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texliv
 e/2015/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2015/tex
 mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2015/texmf-dist/fo
 nts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (6 pages, 347519 bytes).
+Output written on paper.pdf (6 pages, 349152 bytes).
 PDF statistics:
- 118 PDF objects out of 1000 (max. 8388607)
- 93 compressed objects within 1 object stream
+ 158 PDF objects out of 1000 (max. 8388607)
+ 132 compressed objects within 2 object streams
  37 named destinations out of 1000 (max. 500000)
- 38 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 126 words of extra memory for PDF output out of 10000 (max. 10000000)
 
