@@ -7,7 +7,7 @@ size of the design space where applications couple with storage. Programmable
 storage lifts the veil on the system and, with it, forces developers of higher-level services
 to confront a large and expanding set of possible designs.
 
-In this section we elucidate the matter of design space size and complexity in
+In this section we elucidate the matter of design space size and implementation simplicity in
 programmable storage. We report on our experience building and optimizing
 \emph{multiple} functionally equivalent implementations of the CORFU protocol
 in Ceph, demonstrating that static selection of optimization strategies and tuning
@@ -81,8 +81,8 @@ Figure~\ref{fig:phy-design} shows the append throughput of four such
 implementations running on two versions of Ceph from 2014 and 2016. The data indicate 
 performance in general is significantly better in the newer version of Ceph. 
 However, the implementations manifest another interesting observation. The top two
-implementations, run on a version of Ceph from 2014, perform with nearly identical throughput, 
-but have strikingly different implementation complexities. The performance of the same
+run on a version of Ceph from 2014 and perform with nearly identical throughput 
+but with striking differences in their implementation. The performance of the same
 implementations on the newer version of Ceph illustrates a challenge: developers face a
 reasonable choice of a simpler implementation in the 2014 version of Ceph and a storage interface
 which will perform worse in the 2016 version of Ceph, requiring a significant overhaul of low-level
