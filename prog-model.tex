@@ -1,6 +1,61 @@
 \section{Declarative Programmable Storage}
 \label{sec:prog-model}
 
+\begin{figure*}[t]
+\begin{subfigure}{.3\columnwidth}
+\centering
+\scalebox{.6}{
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.2cm,semithick]
+%\tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+  \node[initial left,state] (A)              {$EG$};
+  \node[state]         (B) [below left of=A] {$CP$};
+  \node[state]         (D) [below of=B]       {$IO$};
+  \node[state]         (C) [below right of=A] {$GC$};
+  \node[state]         (E) [below of=C]       {$US$};
+  \node[state]         (F) [below left of=E] {$Out$};
+
+  \path (A) edge        node [left] {R,W,F} (B)
+            edge        node {T}     (C)
+        (B) edge        node {F}     (C)
+            edge        node {R,W}   (D)
+        (C) edge        node {F,T}   (E)
+        (D) edge        node {W}     (E)
+            edge        node {R}     (F)
+        (E) edge        node {F,T,W} (F);
+\end{tikzpicture}
+}
+\caption{}
+\label{fig:corfu-sm}
+\end{subfigure}\hfill
+\begin{subfigure}{.65\columnwidth}
+\centering
+\includegraphics[width=0.95\columnwidth]{Corfu_viz_expanded3.pdf}
+\caption{}
+\label{fig:malacologyx}
+\end{subfigure}\hfill
+\begin{subfigure}{0.75\columnwidth}
+
+\begin{lstlisting}[title={{\bf (c)}}, label=lst:write, basicstyle=\tiny]
+bloom :write do
+  temp :valid_write <= write_op.notin(found_op)
+  log <+ valid_write{ |o| [o.pos, 'valid', o.data]}
+  ret <= valid_write{ |o|
+    [o.type, o.pos, o.epoch, 'ok'] }
+  ret <= write_op.notin(valid_write) {|o|
+    [o.type, o.pos, o.epoch, 'read-only'] }
+end
+
+bloom :trim do
+  log <+- trim_op{|o| [o.pos, 'trimmed']}
+  ret <=  trim_op{|o|
+    [o.type, o.pos, o.epoch, 'ok']}
+end
+\end{lstlisting}
+\end{subfigure}
+\caption{foo}
+\end{figure*}
+
 Current ad-hoc approaches to programmable storage restrict use to developers
 with distributed programming expertise, knowledge of the intricacies of the
 underlying storage system and its performance model, and primarily use
@@ -36,55 +91,6 @@ discussed earlier to be discovered and applied transparently by an optimizer.
 Line 5 defines the write operation as a scratch collection with models
 non-persistent state only valid for the duration of a single time stemp
 allowing an optimizer to treat this state as volatile.
-
-\begin{figure*}[t]
-\begin{subfigure}{.3\columnwidth}
-\centering
-\scalebox{0.45}{
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.2cm,semithick]
-%\tikzstyle{every state}=[fill=red,draw=none,text=white]
-
-  \node[initial left,state] (A)              {$EG$};
-  \node[state]         (B) [below right of=A] {$CP$};
-  \node[state]         (D) [right of=B]       {$IO$};
-  \node[state]         (C) [above right of=A] {$GC$};
-  \node[state]         (E) [right of=C]       {$US$};
-  \node[state]         (F) [below right of=E] {$Out$};
-
-  \path (A) edge        node [left] {R,W,F} (B)
-            edge        node {T}     (C)
-        (B) edge        node {F}     (C)
-            edge        node {R,W}   (D)
-        (C) edge        node {F,T}   (E)
-        (D) edge        node {W}     (E)
-            edge        node {R}     (F)
-        (E) edge        node {F,T,W} (F);
-\end{tikzpicture}
-}
-\caption{}
-\label{fig:corfu-sm}
-\end{subfigure}\hfill
-\begin{subfigure}{.5\columnwidth}
-\centering
-\includegraphics[width=0.95\columnwidth]{Corfu_viz_expanded3.pdf}
-\caption{}
-\label{fig:malacologyx}
-\end{subfigure}\hfill
-\begin{subfigure}{0.9\columnwidth}
-
-\begin{lstlisting}[title={{\bf (c)}}, label=lst:write]
-bloom :write do
-  temp :valid_write <= write_op.notin(found_op)
-  log <+ valid_write{ |o| [o.pos, 'valid', o.data]}
-  ret <= valid_write{ |o|
-    [o.type, o.pos, o.epoch, 'ok'] }
-  ret <= write_op.notin(valid_write) {|o|
-    [o.type, o.pos, o.epoch, 'read-only'] }
-end
-\end{lstlisting}
-\end{subfigure}
-\caption{foo}
-\end{figure*}
 
 %\begin{lstlisting}[caption={Sample \emph{corfu.bloom} program listing}, label=lst:corfublm]
 %bloom :corfu do
