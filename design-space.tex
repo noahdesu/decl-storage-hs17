@@ -153,7 +153,11 @@ is bad: it's unnecessary on-going work, and increases the risk of introducing
 bugs that in the best case affect a single application, and in monolithic
 designs are more likely to cause systemic data loss.
 
-An ideal solution to these challenges is an automated system search of
-\emph{implementations}---not simply tuning parameters---based on programmer
-produced specifications of storage interfaces in a way that is independent of
-optimization strategies and guaranteed to not introduce correctness bugs.
+We believe that with a better understanding of application and interface
+semantics there are better approaches than hard-coded and hand-tuned
+implementations.  An ideal solution to these challenges is an automated system
+search of \emph{implementations}---not simply tuning parameters---based on
+programmer produced specifications of storage interfaces in a way that is
+independent of optimization strategies, and guaranteed to not introduce
+correctness bugs. Next we'll discuss a candidate approach using a declarative
+language for interface specification.
