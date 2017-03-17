@@ -2,29 +2,28 @@
 \label{sec:opts}
 
 It's clear that storage systems are currently in the midst of significant
-change and there are few guide posts available to developers navigating a very
-large and complex physical design space. This has served as the primary source
+change and there are few guide posts available to developers navigating a
+large and complex design space. This has served as the primary source
 of motivation for our use of declarative languages. And while our
 implementation does not yet map a declarative specification on to a particular
 physical design, the specification provides a powerful infrastructure for
 automating this mapping and achieving other optimizations.
-
 Given the declarative nature of the interfaces we have defined, we can draw
 parallels between the physical design challenges described in this paper and
 the large body of mature work in query planning and optimization.  The Bloom
-language that we use as a basis for a declarative specification language
+language that we use as a basis for a declarative specification
 produces a dataflow graph that can be used in static analysis, and we
 envision that this graph will be made fully available to the storage system to
 exploit before and during runtime.
 
 We are currently considering the scope of optimizations that are possible with
-such a dataflow model in the context of the Ceph storage system. For instance, without
-semantic knowledge of the interface, batching techniques described in
+such a dataflow model in the context of the storage systems. For instance, without
+semantic knowledge of an interface, batching techniques described in
 Section~\ref{sec:batch} are limited to optimizations such as selecting magic
 values for timers and buffer sizes. Semantic information expands the design
-space, permitted intelligent reordering or coalescing that depends on the
-relationship between operations that goes beyond what auto-tuning has
-considered in a storage system context.
+space, permitted intelligent reordering or coalescing that depends on
+relationships between operations, going beyond what auto-tuning has
+previously considered.
 
 {\bf Conclusion.} Optimizing every new or changed application as storage
 systems evolve is obviously impractical.  A storage system is not the same as a
