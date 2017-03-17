@@ -1,7 +1,9 @@
 \section{Programmable Storage}
 \label{sec:progly}
 
-The most common approaches for designing workarounds capable of handling application requirements not met by an underlying storage system roughly fall into among three categories:
+The most common approaches for designing workarounds capable of handling
+application requirements not met by an underlying storage system roughly fall
+into three categories:
 
 {\bf Extra services.} ``Bolt-on'' services are intended to improve performance
 or enable a feature, but come at the expense of additional hardware, software
@@ -19,7 +21,7 @@ can be fragile.
 For example, both SchiHadoop~\cite{buck:hpc2011-scihadoop} and Rhea~\cite{gkantsidis:nsdi2013-rhea} do
 an excellent jobs of partitioning data in Hadoop applications, but may not
 withstand the test of time for future workloads, since the partitioning is
-specific to scientific data.
+specific to the use case.
 
 {\bf Storage modifications.} When these two approaches fail to meet an
 application's needs, developers may turn their attention to any number of
@@ -29,8 +31,7 @@ significant cost, domain knowledge, and extreme care when building or
 modifying critical software that can take years of code-hardening to trust.
 For example, HDFS fails to meet many needs 
 of metadata-intensive workloads~\cite{shvachko:login2012-hdfs-scalability}.
-Systems builder achieve performance improvement by modifying the underlying
-architecture or API~\cite{balmin:sigmod2012-clydesdale}.
+This has lead to modifications to its architecture and API~\cite{balmin:sigmod2012-clydesdale} to improve performance.
 
 Rather than relying on storage systems to evolve or applications to
 change, the ``Malacology Approach''
