@@ -34,7 +34,7 @@ real-world services, a distributed shared-log and a file system metadata load
 balancer, could be constructed using a `dirty-slate` approach. Unfortunately, implementing
 applications on top of a system like Malacology can be an ad-hoc process
 that is difficult to reason about and manage.
-
+\\ \indent
 Despite the powerful approach advocated by Malacology, the technique entails navigating 
 a complex design space and simultaneously addressing often orthogonal
 concerns (e.g. functional correctness, performance, and fault-tolerance).
@@ -42,7 +42,7 @@ Worse still, the availability of domain expertise required to build a performant
 As a result, interface composition, as utilized in techniques such as the Malacology Approach, is sensitive to
 change, quickly evolving workloads, and software/hardware upgrades that are characteristic of unified storage systems.
 This necessitates massive maintenance overheads.
-
+\\ \indent
 To address these challenges, we advocate for the use of high-level declarative
 languages (e.g. Datalog) as a means of programming new storage system
 interfaces.  By specifying the functional behavior of a storage interface once
@@ -54,7 +54,7 @@ correctness and performance and protect higher-level services from lower-level
 system changes. However, despite the parallels with database systems, this
 paper demonstrates, and begins to address, fundamental differences in the
 optimization design space.
-
+\\ \indent
 In this paper we demonstrate the challenge of programmable storage by showing
 the sensitivity of domain-specific interfaces to changes in the underlying
 system. We then show that the relational model is able to capture the
