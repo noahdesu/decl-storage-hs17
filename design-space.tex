@@ -19,10 +19,9 @@ storage systems.
 A recent version of Ceph (v10.2.0-1281-g1f03205) has 994 tunable parameters.
 195 parameters pertain to the object server itself and 95 parameters focus on
 low-level storage abstractions built on XFS or BlueStore. Ceph also has
-tunables controlling the characteristics of underlying subsystems, including LevelDB (10 tunables) and RocksDB (5
-tunables), in addition to the Ceph-specific key-value stores (5 tunables), object cache (6
-tunables), journals (24 tunables), and other optional object stores
-like BlueStore (49 tunables).  Previous investigations exploring the application of 
+tunables controlling the characteristics of underlying subsystems, including and RocksDB (5
+tunables), journals (24 tunables).
+Previous investigations exploring the application of 
 auto-tuning~\cite{behzad:sc2013-autotuning} techniques to systems exhibiting a large space of parameters 
 met with limited success. Challenges associated with the approach are exacerbated in the context of
 application-specific modifications and dynamically changing workloads.
@@ -32,10 +31,11 @@ hardware as well as new NVMe devices. All these devices encompass specific sets 
 characteristics and tunables (e.g., the IO operation scheduler type). In our
 experiments, we tested SSD, HDDs, and NVMe devices and discovered a wide range of
 behaviors and performance profiles. While we generally observe the expected
-result of faster devices, choosing the best implementation strategy is highly dependent on hardware. The changes
-in Ceph required to fully exploit the performance profile of NVMe, persistent
-memory, and RDMA networks will likely result in new design trade-offs for
-application-specific interfaces.
+result of faster devices, choosing the best implementation strategy is highly dependent on hardware.
+%The changes
+%in Ceph required to fully exploit the performance profile of NVMe, persistent
+%memory, and RDMA networks will likely result in new design trade-offs for
+%application-specific interfaces.
 
 Evolving hardware and system tunables presents a challenge in optimizing
 systems, even in static cases with fixed workloads. Programmable storage
@@ -90,7 +90,7 @@ interface implementations.
 
 \begin{figure*}[t]
     \centering
-    \begin{subfigure}[b]{.30\linewidth}
+    \begin{subfigure}[b]{.25\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{jewel_v_firefly_pd.png}
         \caption{}
@@ -98,14 +98,14 @@ interface implementations.
         %upgrade of the underlying storage system.}
         \label{fig:phy-design}
     \end{subfigure}
-    \begin{subfigure}[b]{.30\linewidth}
+    \begin{subfigure}[b]{.25\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{batching.png}
         \caption{}
         %\caption{Total throughput with and without batching.}
         \label{fig:batching}
     \end{subfigure}
-    \begin{subfigure}[b]{.30\linewidth}
+    \begin{subfigure}[b]{.25\linewidth}
         \centering
         \includegraphics[width=1.0\linewidth]{batching-outlier-detect.png}
         \caption{}
