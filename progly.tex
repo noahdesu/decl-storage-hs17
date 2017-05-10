@@ -1,42 +1,40 @@
 \section{Programmable Storage}
 \label{sec:progly}
 
-The most common approaches for designing workarounds capable of handling
-application requirements not met by an underlying storage system roughly fall
-into three categories:
+Common workarounds when application requirements are not met
+by its underlying storage system roughly fall into three categories:
 
-{\bf Extra services.} ``Bolt-on'' services are intended to improve performance
-or enable a feature, but come at the expense of additional hardware, software
+{\bf ``Bolt-on services''} improve performance
+or enable new features, but come at the expense of additional hardware, software
 sub-systems, and dependencies that must be managed, as well as trusted.
 For instance, such classes of limitations inspired many extensions to Hadoop
 ~\cite{bu:vldb2010-haloop, ekanayake:hpdc2010-twister,
 ekanayake:escience2008-eglmapreduce, mihailescu:hotstorage2012-mixapart}.
 
-{\bf Application changes.} Changing the underlying application with the addition of
- more data management intelligence or via the integration of domain-specific middleware
- represents another popular option for adapting to storage system deficiencies. 
- When application adjustments depend on non-standard semantics exposed by the storage
-system (e.g. relaxed POSIX file I/O or MPI-IO hints) the resulting coupling 
+{\bf Application changes} introduce data management intelligence or integrate
+domain-specific middleware into an application.
+When application changes depend on non-standard storage semantics
+(e.g. relaxed POSIX file I/O or MPI-IO hints) the resulting coupling 
 can be fragile.
 For example, both SciHadoop~\cite{buck:hpc2011-scihadoop} and Rhea~\cite{gkantsidis:nsdi2013-rhea} do
 an excellent jobs of partitioning data in Hadoop applications, but may not
 withstand the test of time for future workloads, since the partitioning is
 specific to the use case.
 
-{\bf Storage modifications.} When these two approaches fail to meet an
-application's needs, developers may turn their attention to any number of
-heavyweight solutions ranging from changing the storage system itself, up to
-and including designing entirely new systems. This approach can require
-significant cost, domain knowledge, and extreme care when building or
+{\bf Storage system modifications} are often a last resort because such
+heavyweight solutions range from changing the underlying system to
+designing entirely new storage systems. This approach requires modification
+access, significant cost, domain knowledge, and extreme care when building or
 modifying critical software that can take years of code-hardening to trust.
-For example, HDFS fails to meet many needs 
-of metadata-intensive workloads~\cite{shvachko:login2012-hdfs-scalability}.
-This has lead to modifications to its architecture and API~\cite{balmin:sigmod2012-clydesdale} to improve performance.
+For example, HDFS fails to meet many needs of metadata-intensive
+workloads~\cite{shvachko:login2012-hdfs-scalability}.  This has lead to
+modifications to its architecture and API~\cite{balmin:sigmod2012-clydesdale}
+to improve performance.
 
-Rather than relying on storage systems to evolve or applications to
-change, the ``Malacology Approach''
-manifests a hybrid technique which embraces interface instability without placing
-an unmanageable burden on developers.
+Rather than relying on storage systems or applications to change, Malacology
+exposes data management services already present in the underlying system,
+which can be re-used to avoid code duplication and reliance on external
+services.
 
 \subsection{The Malacology Approach}
 
