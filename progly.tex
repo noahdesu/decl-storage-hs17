@@ -38,17 +38,13 @@ services.
 
 \subsection{The Malacology Approach}
 
-%\textcolor{red}{HELP! We can't decide if this section should be called ``The
-%Programmable Storage Approach" or ``The Malacology Approach" -- I argue that
-%Malacology is the prototype but Noah thinks Malacology Approach makes more
-%sense.}
-
-Programmable storage systems improve the development experience over the lifecycles of long-lived and co-designed applications
-and storage systems by exposing a number of existing internal services capable of principled composition. Importantly, the compositionality of the internal functionality aids in the development of higher-level application specific services~\cite{sevilla:eurosys17}.
-Figure~\ref{fig:malacology} shows the architecture of Malacology, a prototype programmable storage system
-implemented in Ceph, which exposes a variety of low-level internal services
-such as custom object interfaces, cluster metadata management, and
-load-balancing. While Ceph natively exposes file, block, and object
+Malacology is a prototype programmable storage system based on Ceph that
+improves the development experience of co-designing applications and storage
+systems by exposing common internal storage services for
+re-use~\cite{sevilla:eurosys17}. Figure~\ref{fig:malacology} shows the
+architecture of Malacology, along with the set of services that are exposed,
+such as domain-specific object interfaces, cluster-level metadata management,
+and load-balancing. While Ceph natively exposes file, block, and object
 abstractions, Malacology demonstrates the construction of two real-world
 services using only the composition of existing interfaces present in Ceph.
 
@@ -61,25 +57,17 @@ services using only the composition of existing interfaces present in Ceph.
 \end{figure}
 
 One of these synthesized interfaces is a high-performance distributed shared
-log that implements the CORFU protocol~\cite{balakrishnan:nsdi12}.
-This protocol achieves high-throughput by using a soft-state network-attached
-counter and stripes log content over a cluster of flash devices exposing
-protocol-specific storage interfaces. While CORFU is a stand-alone system,
-Malacology is able to instantiate the same abstraction and approximate 
-the same unique optimizations.
+log based on the CORFU protocol~\cite{balakrishnan:nsdi12}.  While CORFU can
+be a stand-alone system, Malacology is capable of instantiating the same storage
+abstraction and approximate the same optimizations. High-performance in CORFU
+is achieved in part through the use of a soft-state network-attached counter.
+Malacology approximates this optimization using the capability-based caching
+mechanisms in the Ceph distributed file system, modeling the counter as a
+shared resource (i.e. file metadata). Additionally, the co-designed device
+interfaces used in CORFU are critical to the safety of the protocol, and are
+replicated in Ceph using custom software-based interfaces to storage objects.
 
-Malacology reproduces the CORFU network-attached counter service using a
-capability-based mechanism found in the Ceph distributed file system for
-managing cached metadata. The service implements the counter using the metadata server's ability to provide temporary
-exclusive access to a shared resource (in this case, file metadata). CORFU's storage device interface is
-constructed using application-specific object interfaces in Ceph. These
-software-based interfaces are constructed as a composition of low-level I/O
-interfaces (e.g. an LSM-tree and a bytestream) operating in an atomic
-context, allowing the interface to maintain consistency of updates across native
-interfaces.
-
-The demonstration of interface synthesis in Malacology suggests a new form of
-application development capable of significantly reducing the number of lines of code associated with a higher-level application.
-While such an ability to construct software-defined interfaces is powerful,
-subsequent analyses demonstrate how access to low-level interfaces can be a double-edged
-sword providing extended application development powers at the cost of increased maintenance complexity.
+While powerful, storage interface construction in Malacology is a double-edged
+sword. In the next section we will show how the ad-hoc approach used in
+Malacology is limited by increases in software design and maintenance
+complexity.
