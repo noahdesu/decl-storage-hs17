@@ -6,51 +6,52 @@ providing important disaggregation benefits. Instead of maintaining
 a separate system for each abstraction, \emph{unified} storage
 systems, in particular, support standard file, block, and object abstractions so the same
 hardware can be used for a wider range and a more flexible mix of applications. 
-As large-scale unified storage systems evolve to meet the requirements 
+As large-scale unified storage systems continue to evolve to meet the requirements 
 of an increasingly diverse set of applications and next-generation hardware, \emph{de jure}
 approaches of the past---based on standardized interfaces---are giving way to
 domain-specific interfaces and optimizations. While promising, the ad-hoc strategies characteristic of 
 current approaches to co-design are untenable.
 
 The standardization of the POSIX I/O interface has been a major success. General adoption
-allows application developers to avoid vendor lock-in and encourages storage system
+has allowed application developers to avoid vendor lock-in and encourages storage system
 designers to innovate independently. However, large-scale storage systems are generally dominated 
 by proprietary offerings, preventing exploration of alternative
-interfaces. An increase in the number of special-purpose storage systems characterizes recent history
+interfaces when the has presented itself. An increase in the number of special-purpose storage systems characterizes recent history
 in the field, including the emergence of high-performance, and highly modifiable, open-source storage systems, 
 which enable system changes without of vendor lock-in. Unfortunately, evolving storage system
-interfaces is a challenging task requiring domain expertise and is predicated on the willingness of
+interfaces is a challenging task requiring domain expertise, and is predicated on the willingness of
 programmers to forfeit the protection from change afforded by narrow
 interfaces.
 
 Malacology~\cite{sevilla:eurosys17} is a recently proposed storage system that
 advocates for an approach to co-design called \emph{programmable storage}. The
-approach is based on exposing low-level functionality as reusable building
+approach exposes low-level functionality as reusable building
 blocks, allowing developers to custom-fit their applications to take advantage
-of the code-hardened capabilities of the underlying system and avoid
+of the existing code-hardened capabilities in underlying system, and avoid
 duplication of complex and error-prone services. By recombining existing
-services in the Ceph storage system~\cite{weil:osdi2006-ceph}, Malacology demonstrates how two
+services in the Ceph storage system~\cite{weil:osdi2006-ceph}, Malacology
+demonstrated how two
 real-world services, a distributed shared-log and a file system metadata load
-balancer, could be constructed using a `dirty-slate` approach. Unfortunately, implementing
-applications on top of a system like Malacology can be an ad-hoc process
-that is difficult to reason about and manage.
+balancer, could be constructed using a `dirty-slate` approach. Unfortunately,
+an ad-hoc approach can be difficult to effectively reason about and manage.
 
-Despite the powerful approach advocated by Malacology, the technique entails navigating 
+Despite the benefits of the approach demonstrated by Malacology, the technique
+requires navigation of
 a complex design space and simultaneously addressing often orthogonal
 concerns (e.g. functional correctness, performance, and fault-tolerance).
 Worse still, the availability of domain expertise required to build a performant interface is not a fixed or reliable resource. 
-As a result, interface composition, as utilized in techniques such as the Malacology Approach, is sensitive to
-change, quickly evolving workloads, and software/hardware upgrades that are characteristic of unified storage systems.
-This necessitates massive maintenance overheads.
+As a result, the interfaces built with Malacology are sensitive to evolving
+workloads, and changes to the underlying hardware and software systems,
+necessitating burdensome maintenance overhead.
 
 To address these challenges, we advocate for the use of high-level declarative
 languages (e.g. Datalog) as a means of programming new storage system
-interfaces.  By specifying the functional behavior of a storage interface once
-in a relational (or algebraic language), optimizers built around cost models
-sensitive to storage and access tools and overheads can explore a space of
+\emph{interfaces}.  By specifying the functional behavior of a storage interface once
+in a relational (or algebraic) language, optimizers built around cost models
+can explore a space of
 functionally equivalent physical implementations. Much like query planning and
 optimization in database systems, this approach will logically differentiate
-correctness and performance and protect higher-level services from lower-level
+correctness from performance, and protect higher-level services from lower-level
 system changes. However, despite the parallels with database systems, this
 paper demonstrates, and begins to address, fundamental differences in the
 optimization design space.
