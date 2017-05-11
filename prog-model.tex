@@ -2,6 +2,15 @@
 \label{sec:prog-model}
 
 \begin{figure*}[t]
+\begin{subfigure}{.6\columnwidth}
+    \centering
+    \includegraphics[width=0.95\columnwidth]{batching-outlier-detect.png}
+    \caption{}
+    %\caption{Identifying and handling an outlier independently maintains the
+    %beneifts of batching without the performance degredation of unecessarily
+    %large I/O requests.}
+    \label{fig:batching-outlier}
+\end{subfigure}\hfill
 \begin{subfigure}{.3\columnwidth}
 \centering
 \scalebox{.6}{
@@ -33,22 +42,6 @@
 \includegraphics[width=0.95\columnwidth]{Corfu_viz_expanded3.pdf}
 \caption{}
 \label{fig:dataflow}
-\end{subfigure}\hfill
-\begin{subfigure}{0.75\columnwidth}
-
-\begin{lstlisting}[title={{\bf (c)}}, label=lst:write, basicstyle=\tiny]
-table :epoch, [:epoch]
-table :log, [:pos] => [:state, :data]
-
-bloom :write do
-  temp :valid_write <= write_op.notin(found_op)
-  log <+ valid_write{ |o| [o.pos, 'valid', o.data]}
-  ret <= valid_write{ |o|
-    [o.type, o.pos, o.epoch, 'ok'] }
-  ret <= write_op.notin(valid_write) {|o|
-    [o.type, o.pos, o.epoch, 'read-only'] }
-end
-\end{lstlisting}
 \end{subfigure}
 \caption{(a) shows the state machine for the CORFU storage device. (b) shows the logical dataflow of the CORFU storage protocol
 which could not be more concse and still capture the state machine. (c) shows a sample of the Bloom specification of CORFU.}
@@ -61,45 +54,49 @@ intricacies of the underlying storage system and its performance model, and
 use hard-coded imperative methods. This limits the use of optimizations that
 can be performed automatically or derived from static analysis.  Based on the
 challenges we have demonstrated stemming from the dynamic nature and large
-design space of programmable storage, we present an alternative, declarative
+design space of programmable storage, we propose an alternative, declarative
 programming model which reduces the learning curve for new users, and allows
 existing developers to increase productivity by writing fewer, more portable lines of code.
 
-The model we propose corresponds to a subset of the Bloom, a
+The model we propose corresponds to a subset of Bloom, a
 declarative language for expressing distributed programs as an unordered set
 of rules~\cite{alvaro:cidr11}. Bloom rules fully specify program semantics and
 allow developers to ignore the details associated with program
 evaluatation. This level of abstraction is attractive for building storage
-interfaces whose portability and correctness is critical. We model the
+interfaces whose portability and correctness is critical. We use Bloom to model the
 storage system state uniformly as a collection of relations, with interfaces
 expressed as a collection of \emph{queries} over a request stream that
-are filtered, transformed, and combined with system state. We present a
+are filtered, transformed, and combined with other system state. We present a
 brief example of the CORFU shared-log interface expressed using this model.
 
 \subsection{Example: CORFU as a Query}
 
 We model the storage interface of the CORFU protocol as query in our
-declarative language in which log data and metadata are represented by two
-persistent collections abstractedly mapping to physical storage (Figure~\ref{fig:pm} (c) Lines 1-2). The transformation
-permits optimizations and implementation details (e.g. log striping and partitioning)
-to be discovered and applied transparently by an optimizer. The declarative
-specification of the CORFU \emph{write} operation is shown on lines 3-10.
-This interface is a write-once 64-bit address space and depends on a method
-for quickly resolving log positions and metadata to physical storage
-addresses. Since the specification is invariant across system changes and
-low-level interfaces, the optimizer can automatically render execution decisions 
-and build indexes using the performance characteristics of specific access methods.
+declarative language in which shared-log and other metadata are represented by
+two persistent collections abstractedly mapped onto physical storage This
+transformation permits optimizations and implementation details (e.g. log
+striping and partitioning) to be discovered and applied transparently by an
+optimizer.  Since the specification of the interface is invariant across
+system changes and low-level interfaces, the optimizer can automatically
+render execution decisions and build indexes using the performance
+characteristics of specific access methods.  For example a low-level indexing
+engine for text will likely be out-performed by other engines for the CORFU
+64-bit write-once address space requirements.  Likewise, an instance of the
+interface that uses fixed log entries can directly map log entries onto a
+low-level byte stream.
 
-Amazingly, the semantics of the entire storage interface requirements in CORFU\footnote{Due to space limitations
-refer to \cite{watkins:ucsc-soe-16-12} for a full program listing.} are expressible using only a few Bloom code snippets amenable as input to an optimizer.
-Figure~\ref{fig:corfu-sm} shows the state transition diagram for the CORFU
-storage interface and Figure~\ref{fig:dataflow} shows the corresponding
-dataflow diagram for the Bloom CORFU protocol. Beyond the convenience of writing less code,
-the entire experience of designing and writing an interface such as CORFU in 
-a declarative language such as Bloom eases the process of composing 
-convincingly correct implementations. Specifically, the high-level details of the
-implementation mask distracting issues related to the physical design
-and the many other ``gotchas'' associated with writing low-level
+Amazingly, the semantics of the entire storage interface requirements in
+CORFU\footnote{Due to space limitations refer to \cite{watkins:ucsc-soe-16-12}
+for a full program listing.} are expressible using only a few Bloom code
+snippets amenable as input to an optimizer.  Figure~\ref{fig:corfu-sm}
+shows the state transition diagram for the CORFU storage interface and
+Figure~\ref{fig:dataflow} shows the corresponding dataflow diagram for the
+Bloom CORFU protocol. Beyond the convenience of writing less code, the
+entire experience of designing and writing an interface such as CORFU in a
+declarative language such as Bloom eases the process of writing 
+convincingly correct implementations. Specifically, the high-level details
+of the implementation mask distracting issues related to the physical
+design and the many other ``gotchas'' associated with writing low-level
 systems software.
 
 %In addition, the CORFU interface depends on a trim

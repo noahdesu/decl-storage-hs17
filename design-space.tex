@@ -54,9 +54,7 @@ even routine upgrades can cause performance regressions manifesting in obstacles
 for adopters of a programmable storage approach to development. We use the
 CORFU shared-log protocol as a motivating example.
 
-\subsubsection{Shared-log}
-
-In our implementation of CORFU on Ceph~\cite{zlog} the shared-log is striped
+{\bf Shared-log.} In our implementation of CORFU on Ceph~\cite{zlog} the shared-log is striped
 across a set of objects in Ceph to provide parallel I/O bandwidth. Each object
 implements a custom storage interface that exposes a 64-bit write-once address
 space, and is required by the CORFU protocol.  While this interface can be
@@ -80,58 +78,30 @@ requiring a significant overhaul of low-level interface implementations. We
 believe that these trade-offs will continue to present themselves as new
 hardware is supported and internal storage interfaces evolve.
 
-\begin{figure*}[t]
+\begin{figure}
     \centering
-    \begin{subfigure}[b]{.3\linewidth}
-        \centering
-        \includegraphics[width=1.0\linewidth]{jewel_v_firefly_pd.png}
-        \caption{}
-        %\caption{Relative performance differences can be drastic after a software
-        %upgrade of the underlying storage system.}
-        \label{fig:phy-design}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-        \centering
-        \includegraphics[width=1.0\linewidth]{batching.png}
-        \caption{}
-        %\caption{Total throughput with and without batching.}
-        \label{fig:batching}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-        \centering
-        \includegraphics[width=1.0\linewidth]{batching-outlier-detect.png}
-        \caption{}
-        %\caption{Identifying and handling an outlier independently maintains the
-        %beneifts of batching without the performance degredation of unecessarily
-        %large I/O requests.}
-        \label{fig:batching-outlier}
-    \end{subfigure}
-    \caption{(a) relative performance differences are different after storage
-    software upgrade. (b) total throughput with and without batching. (c)
-    identifying and handling an outlier maintains the benefits
-    of batching without the performance degradation of unnecessarily large I/O
-    requests.}
-\end{figure*}
+    \includegraphics[width=1.0\linewidth]{jewel_v_firefly_pd.png}
+    %\caption{Relative performance differences can be drastic after a software
+    %upgrade of the underlying storage system.}
+    \caption{fixme}
+    \label{fig:phy-design}
+\end{figure}
 
-\subsubsection{Application-specific Group Commit}
-\label{sec:batch}
-
-In addition to the broad challenge of design and implementation, tuning
-application-specific interfaces for a static implementation can be
-challenging.  Group commit is a technique used in database query execution
-that combines multiple transactions in order to amortize over fixed
-per-transaction costs~\cite{cite} Figure~\ref{fig:batching} shows the
-performance impact of using a \emph{group commit}-like technique for batching
-log appends from independent clients into a single request. The
-\emph{Basic-Batch} approach groups multiple requests together, but processes
-each sub-request (i.e. log append) independently at the lowest level.  The
-modest performance increase in this case is attributed to a reduction in
-average per-request costs related to network round-trips and transaction
-context management in the storage server.  Compared with the
-\emph{Basic-Batch} case, the \emph{Opt-Batch} implementation is able to
-achieve significantly higher performance by constructing more efficient I/O
-requests using range queries and data sieving techniques~\cite{750599}
-supported by the low-level I/O interfaces.
+{\bf Group commit.} In addition to the broad challenge of design and
+implementation, tuning application-specific interfaces for a static
+implementation can be challenging.  Group commit is a technique used in
+database query execution that combines multiple transactions in order to
+amortize over fixed per-transaction costs~\cite{cite}. We implemented two
+batching strategies for shared-log appends. The first approach called
+\emph{Basic-Batch} groups multiple requests together, but processes each
+sub-request (i.e. log append) independently at the lowest level.
+The second approach called \emph{Opt-Batch} examines the requests in a batch
+and issues efficient I/O requests at the lowest level (e.g. range queries and
+data seiving~\cite{750599}). With a batch size of one both approaches achieve
+approximately 14K appends per second with a single storage node. With a batch size of five
+\emph{Basic-Batch} and \emph{Opt-Batch} performance increases by 2.3x and 4.2x,
+respectively, and with a batch size of 10 the increase is 2.7x and 7.0x, achieving
+97K appends per second at the high end.
 
 While this batching technique significantly increases throughput, the story is
 more complex. The effectiveness of this technique requires tuning parameters
