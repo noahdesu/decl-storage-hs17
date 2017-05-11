@@ -1,62 +1,49 @@
 \section{Design Space}
 \label{sec:dspace}
 
-The narrowly-defined interfaces representing the dominating trend in storage systems designs
-is a boon allowing systems and applications to evolve independently by establishing limitations on the
-size of the design space where applications couple with storage. Programmable
-storage lifts the veil on the system and, with it, forces developers of higher-level services
-to confront a large and expanding set of possible designs.
+The narrowly-defined interfaces representing the dominating trend in storage
+systems designs is a boon allowing systems and applications to evolve
+independently by establishing limitations on the size of the design space
+where applications couple with storage. Programmable storage lifts the veil on
+the system and, with it, forces developers of higher-level services to
+confront a large and expanding set of possible designs.
 
-In this section we elucidate the matter of design space size and complexity in
-programmable storage. We report on our experience building and optimizing
-\emph{multiple} functionally equivalent implementations of the CORFU protocol
-in Ceph, demonstrating that static selection of optimization strategies and tuning
+In this section we highlight the size and complexity of the design space of
+programmable storage. We report on our experience building multiple
+functionally equivalent implementations of the CORFU protocol in Ceph, and
+demonstrate that static selection of optimization strategies and tuning
 decisions can lead to performance portability challenges in programmable
 storage systems.
 
 \subsection{System Tunables and Hardware}
 
-A recent version of Ceph (v10.2.0-1281-g1f03205) has 994 tunable parameters.
-195 parameters pertain to the object server itself and 95 parameters focus on
-low-level storage abstractions built on XFS or BlueStore. Ceph also has
-tunables controlling the characteristics of underlying subsystems, including and RocksDB (5
-tunables), journals (24 tunables).
-Previous investigations exploring the application of 
-auto-tuning~\cite{behzad:sc2013-autotuning} techniques to systems exhibiting a large space of parameters 
-met with limited success. Challenges associated with the approach are exacerbated in the context of
+A recent version of Ceph from May 2016 had 994 tunable parameters, controlling
+all aspects of the system such as the object storage server (195), low-level
+storage such as XFS or BlueStore (95), low-level sub-systems such as RocksDB
+and journaling (29). Previous investigations exploring the application of
+auto-tuning~\cite{behzad:sc2013-autotuning} techniques to systems exhibiting a
+large space of parameters was met with limited success. And challenges
+associated with this approach are exacerbated in the context of
 application-specific modifications and dynamically changing workloads.
 
-{\bf Hardware.} Ceph is designed to run on a wide variety of commodity
-hardware as well as new NVMe devices. All these devices encompass specific sets of
-characteristics and tunables (e.g., the IO operation scheduler type). In our
-experiments, we tested SSD, HDDs, and NVMe devices and discovered a wide range of
-behaviors and performance profiles. While we generally observe the expected
-result of faster devices, choosing the best implementation strategy is highly dependent on hardware.
-%The changes
-%in Ceph required to fully exploit the performance profile of NVMe, persistent
-%memory, and RDMA networks will likely result in new design trade-offs for
-%application-specific interfaces.
-
-Evolving hardware and system tunables presents a challenge in optimizing
-systems, even in static cases with fixed workloads. Programmable storage
-approaches that introduce application-specific interfaces that are sensitive
-to changes in workloads and the cost models of low-level interfaces that are
-subject to change  greatly increase the design space and set of concerns to be
-addressed by programmers.
+{\bf Hardware.} Ceph is intended to run on a wide variety of commodity,
+high-end, and low-end hardware, including newer high-performance non-volatile
+storage devices. Each hardware configuration encompasses specific sets of
+performance characteristics and tunables (e.g. I/O scheduler selection, and
+policies such as timeouts). In our experiments, we tested a variety of
+hardware and discovered a wide range of behaviors and performance profiles.
+While we generally observe the expected result of faster devices, choosing the
+best implementation strategy is highly dependent on hardware. This will
+continue to be true as storage systems evolve support new storage such as
+persistent memories and RDMA networks that may require entirely new storage
+interfaces for applications to realize fully the performance of hardware.
 
 \textbf{Takeaway:} Evolving hardware and system tunables presents a challenge
 in optimizing systems, even in static cases with fixed workloads. Programmable
 storage approaches that introduce application-specific interfaces which are
 sensitive to changes in workloads, and sensitive to the cost models of
 low-level interfaces that are subject to change, greatly increase the design
-space and set of concerns to be addressed by programmers.
-
-%\textbf{Takeaway:} The ever-evolving space of hardware and system tunables presents a challenge
-%in optimizing systems, even in static cases with fixed workloads. Programmable
-%storage approaches introduce application-specific interfaces sensitive to changes in workloads and 
-%guided by cost models integrating low-level interface performance considerations.
-%In particular, the low-level performance considerations promise to significantly increase the design space and set of
-%concerns to be addressed by programmers.
+space and set of concerns that must be addressed by programmers.
 
 \subsection{Software}
 
@@ -64,29 +51,34 @@ The primary source of complexity in large storage systems is, unsurprisingly,
 the vast amount of software written to handle challenges like fault-tolerance
 and consistency in distributed heterogeneous environments. We have found that
 even routine upgrades can cause performance regressions manifesting in obstacles 
-for adopters of a programmable storage approach to development.
+for adopters of a programmable storage approach to development. We use the
+CORFU shared-log protocol as a motivating example.
 
-The CORFU protocol stripes a log across a cluster of storage
-devices, where each device exposes a custom 64-bit write-once address space for reading
-and writing log entries. While this interface can be built directly into flash
-devices~\cite{wei:systor13}, we constructed four different versions in Ceph
-each as a software abstraction over the existing object interface.
-Each of our software-based implementations differ with respect to optimization
-strategies utilizing internal system interfaces. For instance, one
-implementation uses a key-value interface to manage the address space index
-and entry data, while another implementation stores the entry data using a
-byte-addressable interface. 
+\subsubsection{Shared-log}
+
+In our implementation of CORFU on Ceph~\cite{zlog} the shared-log is striped
+across a set of objects in Ceph to provide parallel I/O bandwidth. Each object
+implements a custom storage interface that exposes a 64-bit write-once address
+space, and is required by the CORFU protocol.  While this interface can be
+built directly into flash devices~\cite{wei:systor13}, we constructed four
+different versions in software as native interfaces in Ceph. Each of our
+implementations differ with respect to which internal interfaces are used
+(e.g. RocksDB, and a bytestream) and how data is striped across the system.
 
 Figure~\ref{fig:phy-design} shows the append throughput of four such
-implementations running on two versions of Ceph from 2014 and 2016. The data indicate 
-performance in general is significantly better in the newer version of Ceph. 
-However, the implementations manifest another interesting observation. The top two
-implementations, run on a version of Ceph from 2014, perform with nearly identical throughput, 
-but have strikingly different implementation complexities. The performance of the same
-implementations on the newer version of Ceph illustrates a challenge: developers face a
-reasonable choice of a simpler implementation in the 2014 version of Ceph and a storage interface
-which will perform worse in the 2016 version of Ceph, requiring a significant overhaul of low-level
-interface implementations.
+implementations running on two versions of Ceph from 2014 and 2016, in which
+the performance in general is significantly better in the newer version of
+Ceph. However, if we consider other costs such as software maintenace the data
+reveal another trade-off. The top two performing implementations running on
+the version of Ceph from 2014 perform with nearly identical throughput, but
+have different implementation complexities. When we consider the performance
+of the same implementations on the newer version of Ceph a challenge presents
+itself: developers face a reasonable choice of a simpler implementation in the
+2014 version of Ceph with little performance difference, and a storage
+interface which will perform significantly worse in the 2016 version of Ceph,
+requiring a significant overhaul of low-level interface implementations. We
+believe that these trade-offs will continue to present themselves as new
+hardware is supported and internal storage interfaces evolve.
 
 \begin{figure*}[t]
     \centering
@@ -124,52 +116,53 @@ interface implementations.
 \subsubsection{Application-specific Group Commit}
 \label{sec:batch}
 
-Group commit is a technique used in database query execution that combines
-multiple transactions in order to amortize over per-transaction fixed costs
-like logging. Figure~\ref{fig:batching} shows the performance impact of using
-a \emph{group commit}-like technique for batching log appends from independent
-clients into a single request. The \emph{Basic-Batch} case implements group
-commit at the request level, but processes each sub-request (i.e. append)
-independently using low-level I/O interfaces. The modest performance increase
-is attributed to a reduction in average per-request costs related to network
-round-trips. Compared with the \emph{Basic-Batch} case, the \emph{Opt-Batch}
-implementation is able to achieve significantly higher performance by
-constructing more efficient I/O requests using range queries and data sieving
-techniques~\cite{750599} afforded by the low-level I/O interfaces.
+In addition to the broad challenge of design and implementation, tuning
+application-specific interfaces for a static implementation can be
+challenging.  Group commit is a technique used in database query execution
+that combines multiple transactions in order to amortize over fixed
+per-transaction costs~\cite{cite} Figure~\ref{fig:batching} shows the
+performance impact of using a \emph{group commit}-like technique for batching
+log appends from independent clients into a single request. The
+\emph{Basic-Batch} approach groups multiple requests together, but processes
+each sub-request (i.e. log append) independently at the lowest level.  The
+modest performance increase in this case is attributed to a reduction in
+average per-request costs related to network round-trips and transaction
+context management in the storage server.  Compared with the
+\emph{Basic-Batch} case, the \emph{Opt-Batch} implementation is able to
+achieve significantly higher performance by constructing more efficient I/O
+requests using range queries and data sieving techniques~\cite{750599}
+supported by the low-level I/O interfaces.
 
-The batched execution technique of group commit can significantly increase
-throughput, but the story is much more complex. The ability to apply this
-technique requires tuning parameters capable of triggering cascading performance impacts.
-For example, adding artificial delays to increase batch size affects other metrics such as latency.
-Additionally, while the performance impact of application-specific batching is significant,
-techniques such as range queries and data sieving are sensitive to outliers
-resulting from buggy or slow clients.
-
-When outliers occur in a batch, naively building large I/O requests can result
-in a large amount of wasted I/O. Figure~\ref{fig:batching-outlier} highlights
-the scope of this challenge. The \emph{Basic-Batch} case handles each request
-in a batch independently and, while the resulting performance is worse relative to the
-other techniques, it is not sensitive to outliers. On the other hand, the \emph{Opt-Batch}
-implementation achieves high append throughput, but performance degrades as
-the magnitude of the outliers in the batch increases. In contrast, an
-\emph{Outlier-Aware} policy applies a simple heuristic to identify and handle outliers 
-independently, resulting in only a slight decrease in
-performance over the best case.
+While this batching technique significantly increases throughput, the story is
+more complex. The effectiveness of this technique requires tuning parameters
+such as forcing request delays to achieve larger batch sizes, which in turn
+have a direct effect on latency. While performance of this technique benefited
+from using range queries and data sieving, these interfaces are sensitive to
+outliers that generate large I/O requests containing a high percentage of
+irrelevant data.  In Figure~\ref{fig:batching-outlier} the \emph{Basic-Batch}
+case handles each request in a batch independently and, while the resulting
+performance is worse relative to the other techniques, it is not sensitive to
+outliers. The \emph{Opt-Batch} implementation achieves high append throughput,
+but performance degrades as the magnitude of the outliers in the batch
+increases due to wasted I/O. In contrast, an \emph{Outlier-Aware} policy
+applies a simple heuristic to identify and handle outliers independently,
+resulting in only a slight decrease in performance over the best case.
 
 \textbf{Takeaway:} Choosing the best implementation of a storage interface
-depends on the timing of development (Ceph version), the expertise of
-programmers and administrators (Ceph features), the tuning parameters and hardware
-selection, as well as system-level and application-specific workload changes.
-A direct consequence of such a large design space is forcing engineers
-to duplicate efforts when hardware and software characteristics change. Such a 
-circumstance necessitates the sub-optimal pursuit of unnecessary on-going work 
-and increases the risk of introducing bugs that, in the best case, affect a single application and, in monolithic
-designs, are more likely to cause systemic data loss.
+depends on the timing of development (e.g. system version), the expertise of
+programmers and administrators, tuning parameters and hardware configuration,
+as well as system-level and application-specific workload charcteristics. A
+direct consequence of such a large design space is that design choices may
+quickly become sub-optimal as aspects of the system change.  This forces
+developers to respond increasing the risk of introducing bugs that, in the
+best case, affect a single application and, in monolithic designs, are more
+likely to cause systemic data loss.
 
-We believe a better understanding of application and interface
-semantics exposes a frontier of new and better approaches with more optimal maintenance requirements
-than hard-coded and hand-tuned implementations. An ideal solution to these challenges is an automated system
-search of \emph{implementations}---not simply tuning parameters---based on
+We believe a better understanding of application and interface semantics
+exposes a frontier of new and better approaches with more optimal maintenance
+requirements than hard-coded and hand-tuned implementations. An ideal solution
+to these challenges is an automated system search of
+\emph{implementations}---not simply tuning parameters---based on
 programmer-produced specifications of storage interfaces in a process
 independent of optimization strategies and guaranteed to not introduce
 correctness bugs. Next we'll discuss a candidate approach using a declarative
