@@ -2,7 +2,7 @@
 \label{sec:progly}
 
 Common workarounds when application requirements are not met
-by its underlying storage system roughly fall into three categories:
+by an underlying storage system roughly fall into three categories:
 
 {\bf ``Bolt-on services''} improve performance
 or enable new features, but come at the expense of additional hardware, software
@@ -22,9 +22,9 @@ withstand the test of time for future workloads, since the partitioning is
 specific to the use case.
 
 {\bf Storage system modifications} are often a last resort because such
-heavyweight solutions range from changing the underlying system to
-designing entirely new storage systems. This approach requires modification
-access, significant cost, domain knowledge, and extreme care when building or
+heavyweight solutions range from merely changing the underlying system to
+designing entirely new systems. This approach requires at a minimum, a certain level of
+access to modify the system, significant cost, domain knowledge, and extreme care when building or
 modifying critical software that can take years of code-hardening to trust.
 For example, HDFS fails to meet many needs of metadata-intensive
 workloads~\cite{shvachko:login2012-hdfs-scalability}.  This has lead to
@@ -56,10 +56,11 @@ services using only the composition of existing interfaces present in Ceph.
 \label{fig:malacology}
 \end{figure}
 
-One of these synthesized interfaces is a high-performance distributed shared
-log based on the CORFU protocol~\cite{balakrishnan:nsdi12}.  While CORFU can
+One of these synthesized interfaces is a high-performance distributed
+shared-log
+based on the CORFU protocol~\cite{balakrishnan:nsdi12}.  While CORFU can
 be a stand-alone system, Malacology is capable of instantiating the same storage
-abstraction and approximate the same optimizations. High-performance in CORFU
+abstraction and approximating the same optimizations. High-performance in CORFU
 is achieved in part through the use of a soft-state network-attached counter.
 Malacology approximates this optimization using the capability-based caching
 mechanisms in the Ceph distributed file system, modeling the counter as a
@@ -68,6 +69,9 @@ interfaces used in CORFU are critical to the safety of the protocol, and are
 replicated in Ceph using custom software-based interfaces to storage objects.
 
 While powerful, storage interface construction in Malacology is a double-edged
-sword. In the next section we will show how the ad-hoc approach used in
-Malacology is limited by increases in software design and maintenance
-complexity.
+sword. The narrowly-defined interfaces dominating systems today have been a
+boon to developers by limiting the size of the design space where applications
+couple with storage, allowing systems to evolve independently. Programmable
+storage lifts the veil on the system and, with it, forces developers of
+higher-level services to confront a large and expanding set of possible
+designs.

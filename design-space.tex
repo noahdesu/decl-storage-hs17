@@ -1,19 +1,13 @@
 \section{Design Space}
 \label{sec:dspace}
 
-The narrowly-defined interfaces representing the dominating trend in storage
-systems designs is a boon allowing systems and applications to evolve
-independently by establishing limitations on the size of the design space
-where applications couple with storage. Programmable storage lifts the veil on
-the system and, with it, forces developers of higher-level services to
-confront a large and expanding set of possible designs.
-
 In this section we highlight the size and complexity of the design space of
-programmable storage. We report on our experience building multiple
-functionally equivalent implementations of the CORFU protocol in Ceph, and
-demonstrate that static selection of optimization strategies and tuning
-decisions can lead to performance portability challenges in programmable
-storage systems.
+programmable storage, showing how the ad-hoc approach used in Malacology is
+limited by increases in software design and maintenace of co-designed
+interfaces. We report on our experience building multiple functionally
+equivalent implementations of the CORFU protocol in Ceph, and demonstrate that
+static selection of optimization strategies and tuning decisions can lead to
+performance portability challenges.
 
 \subsection{System Tunables and Hardware}
 
