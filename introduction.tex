@@ -16,9 +16,9 @@ The standardization of the POSIX I/O interface has been a major success. General
 has allowed application developers to avoid vendor lock-in and encourages storage system
 designers to innovate independently. However, large-scale storage systems are generally dominated 
 by proprietary offerings, preventing exploration of alternative
-interfaces when the has presented itself. An increase in the number of special-purpose storage systems characterizes recent history
+interfaces when the need has presented itself. An increase in the number of special-purpose storage systems characterizes recent history
 in the field, including the emergence of high-performance, and highly modifiable, open-source storage systems, 
-which enable system changes without of vendor lock-in. Unfortunately, evolving storage system
+which enable system changes without fear of vendor lock-in. Unfortunately, evolving storage system
 interfaces is a challenging task requiring domain expertise, and is predicated on the willingness of
 programmers to forfeit the protection from change afforded by narrow
 interfaces.
@@ -27,13 +27,13 @@ Malacology~\cite{sevilla:eurosys17} is a recently proposed storage system that
 advocates for an approach to co-design called \emph{programmable storage}. The
 approach exposes low-level functionality as reusable building
 blocks, allowing developers to custom-fit their applications to take advantage
-of the existing code-hardened capabilities in underlying system, and avoid
+of the existing code-hardened capabilities in an underlying system, and avoid
 duplication of complex and error-prone services. By recombining existing
 services in the Ceph storage system~\cite{weil:osdi2006-ceph}, Malacology
 demonstrated how two
 real-world services, a distributed shared-log and a file system metadata load
 balancer, could be constructed using a `dirty-slate` approach. Unfortunately,
-an ad-hoc approach can be difficult to effectively reason about and manage.
+such an ad-hoc approach can be difficult to effectively reason about and manage.
 
 Despite the benefits of the approach demonstrated by Malacology, the technique
 requires navigation of
@@ -41,8 +41,8 @@ a complex design space and simultaneously addressing often orthogonal
 concerns (e.g. functional correctness, performance, and fault-tolerance).
 Worse still, the availability of domain expertise required to build a performant interface is not a fixed or reliable resource. 
 As a result, the interfaces built with Malacology are sensitive to evolving
-workloads, and changes to the underlying hardware and software systems,
-necessitating burdensome maintenance overhead.
+workloads. This results in burdensome maintenance overhead when underlying
+hardware and software changes.
 
 To address these challenges, we advocate for the use of high-level declarative
 languages (e.g. Datalog) as a means of programming new storage system
@@ -56,9 +56,9 @@ system changes. However, despite the parallels with database systems, this
 paper demonstrates, and begins to address, fundamental differences in the
 optimization design space.
 
-In this paper we demonstrate the challenge of programmable storage by showing
-the sensitivity of domain-specific interfaces to changes in the underlying
-system. We then show that the relational model is able to capture the
-functional behavior of a popular shared-log service, and finally we explore
-additional optimizations capable of expanding the space of
-possible implementations.
+In the next section we expand on the concept of programmable storage, and then
+highlight the size and complexity of the design space confronting developers
+that embark on co-designing applications and storage.  Using a distributed
+shared-log interface as a motivating example, we propose the use of a
+declarative language capable of capturing functional behavior for defining
+future storage system interfaces.
