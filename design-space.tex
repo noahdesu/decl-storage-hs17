@@ -13,7 +13,7 @@ performance portability challenges.
 
 A recent version of Ceph from May 2016 had 994 tunable parameters, controlling
 all aspects of the system such as the object storage server (195), low-level
-storage such as XFS or BlueStore (95), low-level sub-systems such as RocksDB
+components such as XFS and BlueStore (95), and sub-systems such as RocksDB
 and journaling (29). Previous investigations exploring the application of
 auto-tuning~\cite{behzad:sc2013-autotuning} techniques to systems exhibiting a
 large space of parameters was met with limited success. And challenges
@@ -28,15 +28,15 @@ policies such as timeouts). In our experiments, we tested a variety of
 hardware and discovered a wide range of behaviors and performance profiles.
 While we generally observe the expected result of faster devices, choosing the
 best implementation strategy is highly dependent on hardware. This will
-continue to be true as storage systems evolve support new storage such as
+continue to be true as storage systems evolve to support new storage such as
 persistent memories and RDMA networks that may require entirely new storage
-interfaces for applications to realize fully the performance of hardware.
+interfaces for applications to fully exploit the performance of hardware.
 
 \textbf{Takeaway:} Evolving hardware and system tunables presents a challenge
 in optimizing systems, even in static cases with fixed workloads. Programmable
-storage approaches that introduce application-specific interfaces which are
-sensitive to changes in workloads, and sensitive to the cost models of
-low-level interfaces that are subject to change, greatly increase the design
+storage approaches that introduce application-specific interfaces are
+sensitive to changes in workloads and the cost models of
+low-level interfaces that are subject to change. This greatly increases the design
 space and set of concerns that must be addressed by programmers.
 
 \subsection{Software}
@@ -50,12 +50,12 @@ CORFU shared-log protocol as a motivating example.
 
 {\bf Shared-log.} In our implementation of CORFU on Ceph~\cite{zlog} the shared-log is striped
 across a set of objects in Ceph to provide parallel I/O bandwidth. Each object
-implements a custom storage interface that exposes a 64-bit write-once address
-space, and is required by the CORFU protocol.  While this interface can be
+implements the custom storage interface that exposes a 64-bit write-once address
+space, required by the CORFU protocol.  While this interface can be
 built directly into flash devices~\cite{wei:systor13}, we constructed four
 different versions in software as native interfaces in Ceph. Each of our
 implementations differ with respect to which internal interfaces are used
-(e.g. RocksDB, and a bytestream) and how data is striped across the system.
+(e.g. RocksDB, and/or a bytestream) and how data is striped and partitioned in the system.
 
 Figure~\ref{fig:phy-design} shows the append throughput of four such
 implementations running on two versions of Ceph from 2014 and 2016, in which
@@ -77,7 +77,8 @@ hardware is supported and internal storage interfaces evolve.
     \includegraphics[width=1.0\linewidth]{jewel_v_firefly_pd.png}
     %\caption{Relative performance differences can be drastic after a software
     %upgrade of the underlying storage system.}
-    \caption{fixme}
+    \caption{Performance of four shared-log implementations on two different
+    versions Ceph.}
     \label{fig:phy-design}
 \end{figure}
 
@@ -85,12 +86,12 @@ hardware is supported and internal storage interfaces evolve.
 implementation, tuning application-specific interfaces for a static
 implementation can be challenging.  Group commit is a technique used in
 database query execution that combines multiple transactions in order to
-amortize over fixed per-transaction costs~\cite{cite}. We implemented two
+amortize over fixed per-transaction costs. We implemented two
 batching strategies for shared-log appends. The first approach called
 \emph{Basic-Batch} groups multiple requests together, but processes each
 sub-request (i.e. log append) independently at the lowest level.
 The second approach called \emph{Opt-Batch} examines the requests in a batch
-and issues efficient I/O requests at the lowest level (e.g. range queries and
+and issues efficient low-level I/O requests (e.g. range queries and
 data seiving~\cite{750599}). With a batch size of one both approaches achieve
 approximately 14K appends per second with a single storage node. With a batch size of five
 \emph{Basic-Batch} and \emph{Opt-Batch} performance increases by 2.3x and 4.2x,
@@ -118,9 +119,9 @@ programmers and administrators, tuning parameters and hardware configuration,
 as well as system-level and application-specific workload charcteristics. A
 direct consequence of such a large design space is that design choices may
 quickly become sub-optimal as aspects of the system change.  This forces
-developers to respond increasing the risk of introducing bugs that, in the
-best case, affect a single application and, in monolithic designs, are more
-likely to cause systemic data loss.
+developers to adapt implementations, increasing the risk of introducing bugs that, in the
+best case, affect a single application and, in monolithic designs, may
+cause systemic data loss.
 
 We believe a better understanding of application and interface semantics
 exposes a frontier of new and better approaches with more optimal maintenance
@@ -128,6 +129,6 @@ requirements than hard-coded and hand-tuned implementations. An ideal solution
 to these challenges is an automated system search of
 \emph{implementations}---not simply tuning parameters---based on
 programmer-produced specifications of storage interfaces in a process
-independent of optimization strategies and guaranteed to not introduce
+independent of optimization strategies, and guaranteed to not introduce
 correctness bugs. Next we'll discuss a candidate approach using a declarative
 language for interface specification.
