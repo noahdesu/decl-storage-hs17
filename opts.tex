@@ -21,9 +21,18 @@ such a dataflow model in the context of the storage systems. For instance, witho
 semantic knowledge of an interface, batching techniques described in
 Section~\ref{software} are limited to optimizations such as selecting magic
 values for timers and buffer sizes. Semantic information expands the design
-space, permitted intelligent reordering or coalescing that depends on
+space, permitting intelligent reordering or coalescing that depends on
 relationships between operations, going beyond what auto-tuning has
 previously considered.
+
+Finally, we acknowledge that new non-volatile memories are exposing code path
+length as a bottleneck~\cite{bottle}, and that achieving a desired performance
+level while proposing \emph{higher}-level abstractions is a critical concern
+that must be addressed. We see advancements in main memory databases as an
+indicator that performance considerations are being addressed in similar
+contexts, and recognize that our proposed system may further benefit from
+simpler data models, and realistic constraints such as relatively infrequent
+changes that permit aggressive static optimizations.
 
 {\bf Conclusion.} Optimizing every new or changed application as storage
 systems evolve is obviously impractical.  A storage system is not the same as a
