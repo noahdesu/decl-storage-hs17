@@ -16,7 +16,7 @@ domain-specific middleware into an application.  When application changes
 depend on non-standard storage semantics (e.g. relaxed POSIX file I/O or
 MPI-IO hints) the resulting coupling can be fragile.  For example, both
 SciHadoop~\cite{buck:hpc2011-scihadoop} and
-Rhea~\cite{gkantsidis:nsdi2013-rhea} do an excellent jobs of partitioning data
+Rhea~\cite{gkantsidis:nsdi2013-rhea} do an excellent job of partitioning data
 in Hadoop applications, but may not withstand the test of time for future
 workloads, since the partitioning is specific to the use case. Approaches to
 I/O optimization in middleware (e.g.  MPI-IO) take advantage of an
@@ -76,7 +76,8 @@ shared resource (i.e. file metadata). Additionally, the co-designed device
 interfaces used in CORFU are critical to the safety of the protocol, and are
 replicated in Ceph using custom software-based interfaces to storage objects.
 
-While powerful, storage interface construction in Malacology is a double-edged
+While powerful, storage interface construction in Malacology (Data I/O interface in
+Figure~\ref{fig:malacology}) is a double-edged
 sword. The narrowly-defined interfaces dominating systems today have been a
 boon to developers by limiting the size of the design space where applications
 couple with storage, allowing systems to evolve independently. Programmable

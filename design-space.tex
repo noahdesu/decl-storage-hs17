@@ -3,22 +3,24 @@
 
 In this section we highlight the size and complexity of the design space of
 programmable storage, showing how the ad-hoc approach used in Malacology is
-limited by increases in software design and maintenace of co-designed
-interfaces. We report on our experience building multiple functionally
-equivalent implementations of the CORFU protocol in Ceph, and demonstrate that
-static selection of optimization strategies and tuning decisions can lead to
-performance portability challenges.
+limited by increases in software design and maintenance of co-designed
+interfaces. Note that while there are many interfaces in Malacology, we focus
+on the \emph{Data I/O} interface for our examples. We report on our experience
+building multiple functionally equivalent implementations of the CORFU protocol
+in Ceph, and demonstrate that static selection of optimization strategies and
+tuning decisions can lead to performance portability challenges.
 
 \subsection{System Tunables and Hardware}
 
 A recent version of Ceph from May 2016 had 994 tunable parameters, controlling
 all aspects of the system such as the object storage server (195), low-level
-components such as XFS and BlueStore (95), and sub-systems such as RocksDB
-and journaling (29). Previous investigations exploring the application of
-auto-tuning~\cite{behzad:sc2013-autotuning} techniques to systems exhibiting a
-large space of parameters was met with limited success. And challenges
+components such as XFS and BlueStore (95), and sub-systems such as RocksDB and
+journaling (29). Previous investigations exploring the application of
+auto-tuning techniques to systems exhibiting a large space of parameters was
+met with limited success~\cite{behzad:sc2013-autotuning}. And challenges
 associated with this approach are exacerbated in the context of
-application-specific modifications and dynamically changing workloads.
+application-specific modifications and dynamically changing workloads which
+only serve to increase the state space size.
 
 {\bf Hardware.} Ceph is intended to run on a wide variety of commodity,
 high-end, and low-end hardware, including newer high-performance non-volatile
@@ -28,7 +30,7 @@ policies such as timeouts). In our experiments, we tested a variety of
 hardware and discovered a wide range of behaviors and performance profiles.
 While we generally observe the expected result of faster devices, choosing the
 best implementation strategy is highly dependent on hardware. This will
-continue to be true as storage systems evolve to support new storage such as
+continue to be true as storage systems evolve to support new technologies such as
 persistent memories and RDMA networks that may require entirely new storage
 interfaces for applications to fully exploit the performance of hardware.
 
@@ -54,15 +56,15 @@ across a set of objects in Ceph to provide parallel I/O bandwidth. Each object
 implements the custom storage interface that exposes a 64-bit write-once address
 space, required by the CORFU protocol.  While this interface can be
 built directly into flash devices~\cite{wei:systor13}, we constructed four
-different versions in software as native interfaces in Ceph. Each of our
+different versions in software as native RADOS interfaces in Ceph. Each of our
 implementations differ with respect to which internal interfaces are used
 (e.g. RocksDB, and/or a bytestream) and how data is striped and partitioned in the system.
 
 Figure~\ref{fig:phy-design} shows the append throughput of four such
-implementations running on two versions of Ceph from 2014 and 2016, in which
+implementations running on two versions of Ceph from 2014 and 2016 using the same hardware, in which
 the performance in general is significantly better in the newer version of
-Ceph. However, if we consider other costs such as software maintenace the data
-reveal another trade-off. The top two performing implementations running on
+Ceph. However, if we consider other costs such as software maintenance these results
+reveal another trade-off. The top two best implementations running on
 the version of Ceph from 2014 perform with nearly identical throughput, but
 have different implementation complexities. When we consider the performance
 of the same implementations on the newer version of Ceph a challenge presents
@@ -93,7 +95,7 @@ batching strategies for shared-log appends. The first approach called
 sub-request (i.e. log append) independently at the lowest level.
 The second approach called \emph{Opt-Batch} examines the requests in a batch
 and issues efficient low-level I/O requests (e.g. range queries and
-data seiving~\cite{750599}). With a batch size of one both approaches achieve
+data sieving~\cite{750599}). With a batch size of one both approaches achieve
 approximately 14K appends per second with a single storage node. With a batch size of five
 \emph{Basic-Batch} and \emph{Opt-Batch} performance increases by 2.3x and 4.2x,
 respectively, and with a batch size of 10 the increase is 2.7x and 7.0x, achieving
@@ -115,17 +117,17 @@ applies a simple heuristic to identify and handle outliers independently,
 resulting in only a slight decrease in performance over the best case.
 
 \textbf{Takeaway:} Choosing the best implementation of a storage interface
-depends on the timing of development (e.g. system version), the expertise of
-programmers and administrators, tuning parameters and hardware configuration,
-as well as system-level and application-specific workload charcteristics. A
-direct consequence of such a large design space is that design choices may
+depends on the timing of development (e.g. system version); the expertise of
+programmers and administrators; tuning parameters and hardware configuration;
+and system-level and application-specific workload characteristics. A
+direct consequence of such a large design space is that some choices may
 quickly become sub-optimal as aspects of the system change.  This forces
 developers to adapt implementations, increasing the risk of introducing bugs that, in the
 best case, affect a single application and, in monolithic designs, may
 cause systemic data loss.
 
 We believe a better understanding of application and interface semantics
-exposes a frontier of new and better approaches with more optimal maintenance
+exposes a frontier of new and better approaches with fewer maintenance
 requirements than hard-coded and hand-tuned implementations. An ideal solution
 to these challenges is an automated system search of
 \emph{implementations}---not simply tuning parameters---based on
