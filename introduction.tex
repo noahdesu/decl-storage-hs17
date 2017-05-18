@@ -33,11 +33,11 @@ services in the Ceph storage system~\cite{weil:osdi2006-ceph}, Malacology
 demonstrated how two
 real-world services, a distributed shared-log and a file system metadata load
 balancer, could be constructed using a `dirty-slate` approach. Unfortunately,
-such an ad-hoc approach can be difficult to effectively reason about and manage.
+such an ad-hoc approach can be difficult to reason effectively about and manage.
 
 Despite the benefits of the approach demonstrated by Malacology, the technique
 requires navigation of
-a complex design space and simultaneously addressing often orthogonal
+a complex design space while simultaneously addressing often orthogonal
 concerns (e.g. functional correctness, performance, and fault-tolerance).
 Worse still, the availability of domain expertise required to build a performant interface is not a fixed or reliable resource. 
 As a result, the interfaces built with Malacology are sensitive to evolving
@@ -52,7 +52,7 @@ can explore a space of
 functionally equivalent physical implementations. Much like query planning and
 optimization in database systems, this approach will logically differentiate
 correctness from performance, and protect higher-level services from lower-level
-system changes. However, despite the parallels with database systems, this
+system changes~\cite{sel79}. However, despite the parallels with database systems, this
 paper demonstrates, and begins to address, fundamental differences in the
 optimization design space.
 
