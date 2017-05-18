@@ -73,7 +73,7 @@ brief example of the CORFU shared-log interface expressed using this model.
 
 \subsection{Example: CORFU as a Query}
 
-We model the storage interface of the CORFU protocol as query in our
+We model the storage interface of the CORFU protocol as a query in our
 declarative language in which shared-log and other metadata are represented by
 two persistent abstract collections mapped onto physical storage. This
 transformation permits optimizations and implementation details (e.g. log
@@ -100,6 +100,19 @@ convincingly correct implementations. Specifically, the high-level details
 of the implementation mask distracting issues related to the physical
 design and the many other ``gotchas'' associated with writing low-level
 systems software.
+
+Our current Bloom specification of the CORFU protocol assumes the existence of
+an external sequencer service to assign log positions. However, we are working
+towards a specification that defines the sequencer service as a view over the
+log, whose state is managed in volatile storage. A declarative specification
+will be critical to providing portability of the service, since storage
+systems internally utilize volatile storage in many forms (e.g. memory caches
+and non-replicated data). Our work in Malacology showed how inode state in a
+distributed file system could be used to build a sequencer (see
+Section~\ref{mala}), but an object-based storage system could place sequencer
+state in an object cache while providing fast-path access that is difficult to
+achieve with the consistency and durability requirements of non-volatile
+object state.
 
 %In addition, the CORFU interface depends on a trim
 %interface to mark unused poritions of the log (shown on lines 10-15) Trimmed
