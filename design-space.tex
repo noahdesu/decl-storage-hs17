@@ -56,7 +56,7 @@ across a set of objects in Ceph to provide parallel I/O bandwidth. Each object
 implements the custom storage interface that exposes a 64-bit write-once address
 space, required by the CORFU protocol.  While this interface can be
 built directly into flash devices~\cite{wei:systor13}, we constructed four
-different versions in software as native RADOS interfaces in Ceph. Each of our
+different versions in software as native object interfaces in Ceph. Each of our
 implementations differs with respect to which internal interfaces are used
 (e.g. RocksDB, and/or a bytestream) and how data is striped and partitioned in the system.
 
